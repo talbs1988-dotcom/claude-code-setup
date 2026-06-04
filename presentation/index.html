@@ -1,0 +1,729 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Claude Code Business — ההתקנות</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0c;
+        --panel: #141219;
+        --gold-deep: #9c6b28;
+        --gold: #c99a3c;
+        --gold-light: #eac56e;
+        --gold-grad: linear-gradient(
+          120deg,
+          #9c6b28 0%,
+          #eac56e 48%,
+          #c99a3c 100%
+        );
+        --text: #f2ede3;
+        --dim: #9c948a;
+        --line: rgba(234, 197, 110, 0.16);
+        --font: "Rubik", sans-serif;
+        --mono: "JetBrains Mono", monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
+      .atmosphere {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .atmosphere::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            820px 620px at 50% 6%,
+            rgba(201, 154, 60, 0.14),
+            transparent 60%
+          ),
+          radial-gradient(
+            680px 680px at 14% 92%,
+            rgba(156, 107, 40, 0.09),
+            transparent 60%
+          );
+      }
+      .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+
+      .deck {
+        position: fixed;
+        inset: 0;
+        z-index: 2;
+      }
+      .slide {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 9vh 9vw;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(24px) scale(0.99);
+        transition:
+          opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+          transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+          visibility 0.7s;
+        overflow-y: auto;
+      }
+      .slide.active {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+      }
+
+      .wordmark {
+        font-weight: 600;
+        font-size: 1rem;
+        letter-spacing: 0.32em;
+        color: var(--gold-light);
+        margin-bottom: 2.6rem;
+        text-transform: uppercase;
+        opacity: 0.85;
+      }
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+      }
+      .eyebrow::before,
+      .eyebrow::after {
+        content: "";
+        width: 28px;
+        height: 1px;
+        background: var(--gold-grad);
+      }
+      h1,
+      h2 {
+        font-weight: 800;
+        line-height: 1.12;
+        letter-spacing: -0.02em;
+      }
+      .gold {
+        background: var(--gold-grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      #s1 h1 {
+        font-size: clamp(2.8rem, 7.5vw, 5.8rem);
+        font-weight: 900;
+        margin-bottom: 1.5rem;
+      }
+      #s1 .sub {
+        font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+        color: var(--dim);
+        max-width: 34ch;
+        font-weight: 300;
+      }
+
+      #s2 h2 {
+        font-size: clamp(2.1rem, 5.5vw, 4rem);
+        margin-bottom: 1.8rem;
+        max-width: 18ch;
+      }
+      .lead-text {
+        font-size: clamp(1.05rem, 2vw, 1.4rem);
+        color: var(--text);
+        max-width: 42ch;
+        font-weight: 300;
+        margin-bottom: 1.1rem;
+      }
+      .lead-text strong {
+        color: var(--gold-light);
+        font-weight: 600;
+      }
+
+      #s3 h2,
+      #s4 h2 {
+        font-size: clamp(1.9rem, 4.6vw, 3.2rem);
+        margin-bottom: 2.4rem;
+        max-width: 20ch;
+      }
+      .grid {
+        display: grid;
+        gap: 1.1rem;
+        width: 100%;
+        max-width: 1000px;
+      }
+      .g3 {
+        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      }
+      .g5 {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+      .card {
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.035),
+          rgba(255, 255, 255, 0.005)
+        );
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 1.7rem 1.4rem;
+        transition:
+          transform 0.4s,
+          border-color 0.4s,
+          box-shadow 0.4s;
+        text-align: center;
+      }
+      .card:hover {
+        transform: translateY(-7px);
+        border-color: rgba(234, 197, 110, 0.5);
+        box-shadow: 0 22px 50px -26px rgba(201, 154, 60, 0.5);
+      }
+      .card .emoji {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 0.7rem;
+      }
+      .card .name {
+        font-weight: 700;
+        font-size: 1.3rem;
+        margin-bottom: 0.1rem;
+      }
+      .card .tag {
+        color: var(--gold-light);
+        font-size: 0.95rem;
+        font-weight: 500;
+        margin-bottom: 0.6rem;
+        display: block;
+      }
+      .card .desc {
+        color: var(--dim);
+        font-size: 0.9rem;
+        font-weight: 300;
+        line-height: 1.55;
+      }
+
+      #s5 h2 {
+        font-size: clamp(2rem, 5vw, 3.6rem);
+        margin-bottom: 0.8rem;
+      }
+      #s5 .ilead {
+        color: var(--dim);
+        font-size: 1.12rem;
+        font-weight: 300;
+        margin-bottom: 2.2rem;
+        max-width: 40ch;
+      }
+      .cmd-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.2rem;
+        width: 100%;
+        max-width: 920px;
+      }
+      .cmd {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 15px;
+        overflow: hidden;
+        text-align: right;
+      }
+      .cmd-head {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.85rem 1.3rem;
+        border-bottom: 1px solid var(--line);
+      }
+      .cmd-head .os {
+        font-weight: 700;
+        font-size: 1.1rem;
+      }
+      .cmd-head .dots {
+        display: flex;
+        gap: 6px;
+        margin-inline-start: auto;
+      }
+      .cmd-head .dots i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: block;
+      }
+      .cmd-head .dots i:nth-child(1) {
+        background: #ff5f56;
+      }
+      .cmd-head .dots i:nth-child(2) {
+        background: #ffbd2e;
+      }
+      .cmd-head .dots i:nth-child(3) {
+        background: #27c93f;
+      }
+      .cmd-body {
+        padding: 1.2rem;
+        direction: ltr;
+        text-align: left;
+        position: relative;
+      }
+      .cmd-body code {
+        font-family: var(--mono);
+        font-size: 0.74rem;
+        color: var(--gold-light);
+        word-break: break-all;
+        line-height: 1.7;
+        display: block;
+        padding-inline-end: 3rem;
+      }
+      .copy {
+        position: absolute;
+        top: 0.85rem;
+        inset-inline-end: 0.85rem;
+        background: rgba(234, 197, 110, 0.1);
+        border: 1px solid var(--line);
+        color: var(--gold-light);
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        padding: 0.35rem 0.65rem;
+        border-radius: 7px;
+        cursor: pointer;
+        transition: 0.25s;
+      }
+      .copy:hover {
+        background: var(--gold);
+        color: #1a1206;
+      }
+      .inote {
+        margin-top: 1.8rem;
+        color: var(--dim);
+        font-weight: 300;
+        font-size: 0.98rem;
+        max-width: 54ch;
+      }
+      .inote b {
+        color: var(--gold-light);
+        font-weight: 600;
+      }
+
+      #s6 h2 {
+        font-size: clamp(2.4rem, 6.5vw, 4.6rem);
+        margin: 1.6rem 0 1.1rem;
+      }
+      #s6 p {
+        color: var(--dim);
+        font-size: 1.25rem;
+        font-weight: 300;
+        margin-bottom: 2.2rem;
+      }
+      .seal {
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.26em;
+        color: var(--gold);
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        padding: 0.55rem 1.3rem;
+        text-transform: uppercase;
+      }
+      #s6 .wordmark {
+        margin: 0;
+        font-size: 1.3rem;
+      }
+
+      .slide .reveal {
+        opacity: 0;
+        transform: translateY(26px);
+        transition:
+          opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
+          transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .slide.active .reveal {
+        opacity: 1;
+        transform: none;
+      }
+      .slide.active .reveal:nth-child(1) {
+        transition-delay: 0.05s;
+      }
+      .slide.active .reveal:nth-child(2) {
+        transition-delay: 0.15s;
+      }
+      .slide.active .reveal:nth-child(3) {
+        transition-delay: 0.25s;
+      }
+      .slide.active .reveal:nth-child(4) {
+        transition-delay: 0.35s;
+      }
+      .slide.active .reveal:nth-child(5) {
+        transition-delay: 0.45s;
+      }
+      .slide.active .card.reveal:nth-child(1) {
+        transition-delay: 0.1s;
+      }
+      .slide.active .card.reveal:nth-child(2) {
+        transition-delay: 0.2s;
+      }
+      .slide.active .card.reveal:nth-child(3) {
+        transition-delay: 0.3s;
+      }
+      .slide.active .card.reveal:nth-child(4) {
+        transition-delay: 0.4s;
+      }
+      .slide.active .card.reveal:nth-child(5) {
+        transition-delay: 0.5s;
+      }
+
+      .nav {
+        position: fixed;
+        bottom: 3.5vh;
+        left: 0;
+        right: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1.4rem;
+      }
+      .nav button {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        border: 1px solid var(--line);
+        background: rgba(20, 18, 25, 0.7);
+        backdrop-filter: blur(8px);
+        color: var(--gold-light);
+        font-size: 1.3rem;
+        cursor: pointer;
+        transition: 0.25s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .nav button:hover {
+        background: var(--gold);
+        color: #1a1206;
+        border-color: transparent;
+      }
+      .nav button:disabled {
+        opacity: 0.25;
+        cursor: default;
+      }
+      .dots {
+        display: flex;
+        gap: 0.6rem;
+      }
+      .dots .d {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: rgba(234, 197, 110, 0.25);
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .dots .d.on {
+        background: var(--gold-light);
+        transform: scale(1.3);
+      }
+      .counter {
+        position: fixed;
+        top: 4vh;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 20;
+        font-family: var(--mono);
+        font-size: 0.76rem;
+        letter-spacing: 0.2em;
+        color: var(--gold);
+      }
+      .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.04);
+        z-index: 30;
+      }
+      .progress i {
+        display: block;
+        height: 100%;
+        background: var(--gold-grad);
+        width: 16%;
+        transition: width 0.5s;
+      }
+      .hint {
+        position: fixed;
+        bottom: 3.5vh;
+        inset-inline-end: 9vw;
+        z-index: 20;
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.15em;
+        color: var(--dim);
+      }
+      @media (max-width: 640px) {
+        .slide {
+          padding: 10vh 7vw;
+        }
+        .hint {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="atmosphere"></div>
+    <div class="grain"></div>
+    <div class="progress"><i id="bar"></i></div>
+    <div class="counter" id="counter">01 / 06</div>
+
+    <div class="deck">
+      <!-- 1 WELCOME -->
+      <section class="slide active" id="s1">
+        <div class="wordmark reveal">Tal Bsore</div>
+        <div class="eyebrow reveal">קורס Claude Code Business</div>
+        <h1 class="reveal">ברוכים הבאים 👋</h1>
+        <p class="sub reveal">
+          פרק ההתקנות. כמה דקות של הכנה — ואתם מוכנים להתחיל לעבוד אחרת לגמרי.
+        </p>
+      </section>
+
+      <!-- 2 THE SWITCH -->
+      <section class="slide" id="s2">
+        <div class="eyebrow reveal">לפני שמתקינים — מילה אחת חשובה</div>
+        <h2 class="reveal">
+          זו לא עוד מערכת.<br /><span class="gold">זו תשתית.</span>
+        </h2>
+        <p class="lead-text reveal">
+          🤔 כולם מדברים על Claude Code, ורובם חושבים שזה כלי לכתיבת קוד.
+        </p>
+        <p class="lead-text reveal">
+          האמת? זו תחילת עידן חדש ב-AI. לא עוד צ'אט שמייעץ —
+          <strong>עוזר שפועל בשבילכם.</strong>
+        </p>
+      </section>
+
+      <!-- 3 WHY IT MATTERS -->
+      <section class="slide" id="s3">
+        <div class="eyebrow reveal">למה זה משנה הכל</div>
+        <h2 class="reveal">
+          שלושה דברים שהופכים את זה ל<span class="gold">משחק אחר</span>
+        </h2>
+        <div class="grid g3">
+          <div class="card reveal">
+            <span class="emoji">🔐</span>
+            <div class="name">בעלות על המידע</div>
+            <span class="tag">הכל אצלכם</span>
+            <p class="desc">
+              לא בענן של מישהו אחר — חי אצלכם במחשב. המידע שלכם, נשאר שלכם.
+            </p>
+          </div>
+          <div class="card reveal">
+            <span class="emoji">🎯</span>
+            <div class="name">הכל ממקום אחד</div>
+            <span class="tag">די לקפוץ בין כלים</span>
+            <p class="desc">
+              CRM, דיוור, דו"חות — מתחברים לחלון אחד, במקום עשרה חלונות פתוחים.
+            </p>
+          </div>
+          <div class="card reveal">
+            <span class="emoji">🤖</span>
+            <div class="name">פועל במקומכם</div>
+            <span class="tag">לא רק מייעץ</span>
+            <p class="desc">
+              נגמר ה"תסביר לי", מתחיל ה"תבצע עבורי". סוכן שעושה — לא רק מדבר.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 TOOLS -->
+      <section class="slide" id="s4">
+        <div class="eyebrow reveal">אז בואו נתכונן 🧰</div>
+        <h2 class="reveal">
+          כדי להיכנס לעידן הזה — <span class="gold">חמישה כלים</span>
+        </h2>
+        <div class="grid g5">
+          <div class="card reveal">
+            <span class="emoji">🖥️</span>
+            <div class="name">VS Code</div>
+            <span class="tag">שולחן העבודה</span>
+            <p class="desc">התוכנה שבתוכה הכל קורה.</p>
+          </div>
+          <div class="card reveal">
+            <span class="emoji">⚡</span>
+            <div class="name">Claude Code</div>
+            <span class="tag">העוזר החכם</span>
+            <p class="desc">הכלי עצמו, שבונה בשבילכם.</p>
+          </div>
+          <div class="card reveal">
+            <span class="emoji">⚙️</span>
+            <div class="name">Node</div>
+            <span class="tag">המנוע</span>
+            <p class="desc">מריץ הכל מאחורי הקלעים.</p>
+          </div>
+          <div class="card reveal">
+            <span class="emoji">🔄</span>
+            <div class="name">Git</div>
+            <span class="tag">כפתור ה-Undo</span>
+            <p class="desc">שומר גרסאות — תמיד אפשר לחזור.</p>
+          </div>
+          <div class="card reveal">
+            <span class="emoji">🔤</span>
+            <div class="name">עברית</div>
+            <span class="tag">שזה יעבוד נכון</span>
+            <p class="desc">שעברית תיראה כמו שצריך.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 INSTALL -->
+      <section class="slide" id="s5">
+        <div class="eyebrow reveal">הקסם — פקודה אחת ✨</div>
+        <h2 class="reveal">
+          מתקינים את הכל ב<span class="gold">שורה אחת</span>
+        </h2>
+        <p class="ilead reveal">
+          📋 מעתיקים, מדביקים, לוחצים Enter — והסקריפט מתקין את הכל לבד.
+        </p>
+        <div class="cmd-row reveal">
+          <div class="cmd">
+            <div class="cmd-head">
+              <span class="os">🍎 Mac</span
+              ><span class="dots"><i></i><i></i><i></i></span>
+            </div>
+            <div class="cmd-body">
+              <button
+                class="copy"
+                data-cmd="curl -fsSL https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-mac.command | bash"
+              >
+                העתק</button
+              ><code
+                >curl -fsSL
+                https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-mac.command
+                | bash</code
+              >
+            </div>
+          </div>
+          <div class="cmd">
+            <div class="cmd-head">
+              <span class="os">🪟 Windows</span
+              ><span class="dots"><i></i><i></i><i></i></span>
+            </div>
+            <div class="cmd-body">
+              <button
+                class="copy"
+                data-cmd="irm https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-windows.ps1 | iex"
+              >
+                העתק</button
+              ><code
+                >irm
+                https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-windows.ps1
+                | iex</code
+              >
+            </div>
+          </div>
+        </div>
+        <p class="inote reveal">
+          ⏳ רואים טקסט רץ — <b>זה תקין</b>, זה המחשב עובד. מחכים ל"סיימנו",
+          פותחים VS Code, מתחברים. ✅
+        </p>
+      </section>
+
+      <!-- 6 END -->
+      <section class="slide" id="s6">
+        <div class="seal reveal">✨ המצגת הזו נבנתה כולה ב-Claude Code ✨</div>
+        <h2 class="reveal">מתחילים <span class="gold">בפרקטיקה</span> 🚀</h2>
+        <p class="reveal">הסביבה מוכנה. נתראה בשיעורים הבאים.</p>
+        <div class="wordmark reveal">Tal Bsore</div>
+      </section>
+    </div>
+
+    <div class="nav">
+      <button id="prev" aria-label="הקודם">›</button>
+      <div class="dots" id="dots"></div>
+      <button id="next" aria-label="הבא">‹</button>
+    </div>
+    <div class="hint">← → לניווט</div>
+
+    <script>
+      const slides = [...document.querySelectorAll(".slide")];
+      const dotsWrap = document.getElementById("dots");
+      const counter = document.getElementById("counter");
+      const bar = document.getElementById("bar");
+      const prevBtn = document.getElementById("prev");
+      const nextBtn = document.getElementById("next");
+      let i = 0;
+      slides.forEach((_, n) => {
+        const d = document.createElement("div");
+        d.className = "d" + (n === 0 ? " on" : "");
+        d.onclick = () => go(n);
+        dotsWrap.appendChild(d);
+      });
+      const dots = [...dotsWrap.children];
+      function go(n) {
+        i = Math.max(0, Math.min(slides.length - 1, n));
+        slides.forEach((s, k) => s.classList.toggle("active", k === i));
+        dots.forEach((d, k) => d.classList.toggle("on", k === i));
+        counter.textContent =
+          String(i + 1).padStart(2, "0") +
+          " / " +
+          String(slides.length).padStart(2, "0");
+        bar.style.width = ((i + 1) / slides.length) * 100 + "%";
+        prevBtn.disabled = i === 0;
+        nextBtn.disabled = i === slides.length - 1;
+      }
+      function next() {
+        go(i + 1);
+      }
+      function prev() {
+        go(i - 1);
+      }
+      nextBtn.onclick = next;
+      prevBtn.onclick = prev;
+      addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft" || e.key === " " || e.key === "PageDown")
+          next();
+        if (e.key === "ArrowRight" || e.key === "PageUp") prev();
+      });
+      document.querySelectorAll(".copy").forEach((b) =>
+        b.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          navigator.clipboard.writeText(b.dataset.cmd);
+          const t = b.textContent;
+          b.textContent = "הועתק ✓";
+          setTimeout(() => (b.textContent = t), 1500);
+        }),
+      );
+      go(0);
+    </script>
+  </body>
+</html>
