@@ -1,0 +1,1627 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>מילון הממשק — Claude Code Business</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0c;
+        --panel: #141219;
+        --gold-deep: #9c6b28;
+        --gold: #c99a3c;
+        --gold-light: #eac56e;
+        --gold-grad: linear-gradient(
+          120deg,
+          #9c6b28 0%,
+          #eac56e 48%,
+          #c99a3c 100%
+        );
+        --text: #f2ede3;
+        --dim: #9c948a;
+        --line: rgba(234, 197, 110, 0.16);
+        --line-soft: rgba(234, 197, 110, 0.08);
+        --font: "Rubik", sans-serif;
+        --mono: "JetBrains Mono", monospace;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 90px;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: var(--font);
+        -webkit-font-smoothing: antialiased;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+      .atmosphere {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+      .atmosphere::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(
+            900px 700px at 50% -4%,
+            rgba(201, 154, 60, 0.16),
+            transparent 60%
+          ),
+          radial-gradient(
+            700px 700px at 12% 30%,
+            rgba(156, 107, 40, 0.08),
+            transparent 55%
+          ),
+          radial-gradient(
+            700px 700px at 90% 80%,
+            rgba(234, 197, 110, 0.06),
+            transparent 55%
+          );
+      }
+      .grain {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        opacity: 0.04;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+      }
+      .progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.04);
+        z-index: 60;
+      }
+      .progress i {
+        display: block;
+        height: 100%;
+        width: 0%;
+        background: var(--gold-grad);
+      }
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(12px);
+        background: rgba(10, 10, 12, 0.72);
+        border-bottom: 1px solid var(--line-soft);
+      }
+      .topbar-inner {
+        max-width: 1080px;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 1.2rem;
+        padding: 0.85rem 1.5rem;
+      }
+      .brand {
+        font-weight: 700;
+        letter-spacing: 0.28em;
+        font-size: 0.82rem;
+        color: var(--gold-light);
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .toc {
+        display: flex;
+        gap: 0.4rem;
+        margin-inline-start: auto;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+      .toc a {
+        font-size: 0.8rem;
+        color: var(--dim);
+        text-decoration: none;
+        padding: 0.35rem 0.7rem;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        transition: 0.25s;
+        white-space: nowrap;
+      }
+      .toc a:hover {
+        color: var(--text);
+        border-color: var(--line);
+      }
+      .toc a.active {
+        color: #1a1206;
+        background: var(--gold-grad);
+        font-weight: 600;
+      }
+      .wrap {
+        position: relative;
+        z-index: 2;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 0 1.5rem 6rem;
+      }
+      .gold {
+        background: var(--gold-grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .eyebrow {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: var(--gold);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+      }
+      .eyebrow::before {
+        content: "";
+        width: 26px;
+        height: 1px;
+        background: var(--gold-grad);
+      }
+      .hero {
+        text-align: center;
+        padding: 6.5rem 0 3.5rem;
+      }
+      .hero .wordmark {
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: 0.34em;
+        color: var(--gold-light);
+        text-transform: uppercase;
+        opacity: 0.85;
+        margin-bottom: 2rem;
+      }
+      .hero .eyebrow {
+        margin-bottom: 1.6rem;
+      }
+      .hero .eyebrow::after {
+        content: "";
+        width: 26px;
+        height: 1px;
+        background: var(--gold-grad);
+      }
+      .hero h1 {
+        font-size: clamp(2.6rem, 7vw, 5rem);
+        font-weight: 900;
+        line-height: 1.08;
+        letter-spacing: -0.02em;
+        margin-bottom: 1.4rem;
+      }
+      .hero p.lead {
+        font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+        color: var(--dim);
+        font-weight: 300;
+        max-width: 46ch;
+        margin: 0 auto;
+      }
+      .hero .meta {
+        margin-top: 2.4rem;
+        display: inline-flex;
+        gap: 0.6rem;
+        font-family: var(--mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        color: var(--gold);
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 0.5rem 1.2rem;
+        text-transform: uppercase;
+      }
+      .map {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 0.9rem;
+        margin: 1rem 0 2rem;
+      }
+      .map a {
+        text-decoration: none;
+        color: inherit;
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.035),
+          rgba(255, 255, 255, 0.004)
+        );
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 1.3rem 1.2rem;
+        transition: 0.35s;
+        display: block;
+      }
+      .map a:hover {
+        transform: translateY(-6px);
+        border-color: rgba(234, 197, 110, 0.5);
+        box-shadow: 0 22px 50px -28px rgba(201, 154, 60, 0.5);
+      }
+      .map .n {
+        font-family: var(--mono);
+        font-size: 0.72rem;
+        color: var(--gold);
+        letter-spacing: 0.1em;
+      }
+      .map .t {
+        font-weight: 700;
+        font-size: 1.12rem;
+        margin: 0.45rem 0 0.3rem;
+      }
+      .map .w {
+        color: var(--dim);
+        font-size: 0.82rem;
+        font-weight: 300;
+      }
+      .layer {
+        padding-top: 3.5rem;
+      }
+      .layer-head {
+        position: relative;
+        margin-bottom: 2rem;
+        padding-top: 1.5rem;
+      }
+      .layer-head .big {
+        position: absolute;
+        top: -0.6rem;
+        inset-inline-start: -0.2rem;
+        font-family: var(--mono);
+        font-weight: 500;
+        font-size: clamp(4rem, 12vw, 8rem);
+        line-height: 1;
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(234, 197, 110, 0.14);
+        z-index: 0;
+        pointer-events: none;
+      }
+      .layer-head .label {
+        position: relative;
+        z-index: 1;
+      }
+      .layer-head h2 {
+        position: relative;
+        z-index: 1;
+        font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+        font-weight: 800;
+        letter-spacing: -0.01em;
+        margin-top: 0.5rem;
+      }
+      .layer-head .note {
+        position: relative;
+        z-index: 1;
+        color: var(--dim);
+        font-weight: 300;
+        margin-top: 0.5rem;
+      }
+      .concept {
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.03),
+          rgba(255, 255, 255, 0.004)
+        );
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        padding: 1.7rem 1.6rem;
+        margin-bottom: 1.1rem;
+        transition:
+          border-color 0.4s,
+          box-shadow 0.4s,
+          transform 0.4s;
+      }
+      .concept:hover {
+        border-color: rgba(234, 197, 110, 0.34);
+        box-shadow: 0 26px 60px -40px rgba(201, 154, 60, 0.55);
+      }
+      .concept-head {
+        display: flex;
+        align-items: center;
+        gap: 0.95rem;
+        margin-bottom: 1.2rem;
+        padding-bottom: 1.1rem;
+        border-bottom: 1px solid var(--line-soft);
+      }
+      .concept-head .c-emoji {
+        font-size: 1.9rem;
+        line-height: 1;
+        filter: drop-shadow(0 4px 12px rgba(201, 154, 60, 0.25));
+      }
+      .concept-head .c-name {
+        font-size: 1.35rem;
+        font-weight: 700;
+      }
+      .concept-head .c-sub {
+        display: block;
+        color: var(--gold-light);
+        font-size: 0.88rem;
+        font-weight: 500;
+        margin-top: 0.1rem;
+      }
+      .c-body {
+        display: flex;
+        flex-direction: column;
+        gap: 1.05rem;
+      }
+      .bit .label {
+        font-family: var(--mono);
+        font-size: 0.66rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--gold);
+        display: block;
+        margin-bottom: 0.35rem;
+      }
+      .bit p {
+        font-weight: 300;
+        color: var(--text);
+        font-size: 0.98rem;
+      }
+      .bit p strong,
+      .bit p b {
+        color: var(--gold-light);
+        font-weight: 600;
+      }
+      .bit.analogy {
+        background: rgba(234, 197, 110, 0.05);
+        border-inline-start: 2px solid var(--gold);
+        border-radius: 0 10px 10px 0;
+        padding: 0.85rem 1rem;
+      }
+      .bit.analogy p {
+        font-style: italic;
+        color: #efe6d2;
+      }
+      .callout {
+        margin-top: 0.2rem;
+        background: linear-gradient(
+          160deg,
+          rgba(234, 197, 110, 0.1),
+          rgba(234, 197, 110, 0.02)
+        );
+        border: 1px solid rgba(234, 197, 110, 0.3);
+        border-radius: 14px;
+        padding: 1.1rem 1.2rem;
+      }
+      .callout .ct {
+        font-weight: 700;
+        color: var(--gold-light);
+        display: block;
+        margin-bottom: 0.45rem;
+        font-size: 1rem;
+      }
+      .callout p {
+        font-weight: 300;
+        font-size: 0.95rem;
+        color: var(--text);
+      }
+      .callout p b {
+        color: var(--gold-light);
+        font-weight: 600;
+      }
+      .mini-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.9rem;
+        margin-top: 0.2rem;
+        border: 1px solid var(--line-soft);
+        border-radius: 10px;
+        overflow: hidden;
+      }
+      .mini-table th,
+      .mini-table td {
+        padding: 0.6rem 0.8rem;
+        text-align: right;
+        border-bottom: 1px solid var(--line-soft);
+        font-weight: 300;
+      }
+      .mini-table thead th {
+        background: rgba(234, 197, 110, 0.08);
+        color: var(--gold-light);
+        font-weight: 600;
+        font-size: 0.82rem;
+      }
+      .mini-table td:first-child {
+        color: var(--dim);
+      }
+      .mini-table tr:last-child td {
+        border-bottom: none;
+      }
+      .bridge {
+        background: var(--panel);
+        border: 1px dashed var(--line);
+        border-radius: 14px;
+        padding: 1.2rem 1.4rem;
+        margin: 0.4rem 0 1.1rem;
+        font-weight: 300;
+        color: var(--text);
+      }
+      .bridge b {
+        color: var(--gold-light);
+        font-weight: 600;
+      }
+      .summary {
+        padding-top: 3.5rem;
+      }
+      .sum-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1.8rem;
+        background: linear-gradient(
+          160deg,
+          rgba(255, 255, 255, 0.025),
+          rgba(255, 255, 255, 0.003)
+        );
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      .sum-table td {
+        padding: 0.85rem 1.2rem;
+        border-bottom: 1px solid var(--line-soft);
+        font-weight: 300;
+      }
+      .sum-table tr:last-child td {
+        border-bottom: none;
+      }
+      .sum-table td:first-child {
+        font-weight: 600;
+        color: var(--gold-light);
+        white-space: nowrap;
+        width: 1%;
+        border-inline-end: 1px solid var(--line-soft);
+      }
+      .sum-table tr {
+        transition: background 0.25s;
+      }
+      .sum-table tbody tr:hover {
+        background: rgba(234, 197, 110, 0.05);
+      }
+      .closing {
+        margin-top: 4rem;
+        text-align: center;
+        background: linear-gradient(
+          160deg,
+          rgba(234, 197, 110, 0.08),
+          rgba(234, 197, 110, 0.01)
+        );
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 3.2rem 2rem;
+      }
+      .closing .seal {
+        font-family: var(--mono);
+        font-size: 0.64rem;
+        letter-spacing: 0.24em;
+        color: var(--gold);
+        border: 1px solid var(--line);
+        border-radius: 30px;
+        padding: 0.5rem 1.2rem;
+        text-transform: uppercase;
+        display: inline-block;
+        margin-bottom: 1.6rem;
+      }
+      .closing h2 {
+        font-size: clamp(1.6rem, 4vw, 2.4rem);
+        font-weight: 800;
+        line-height: 1.25;
+        max-width: 24ch;
+        margin: 0 auto 1.4rem;
+      }
+      .closing .wordmark {
+        font-weight: 600;
+        letter-spacing: 0.3em;
+        color: var(--gold-light);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+      }
+      .reveal {
+        opacity: 0;
+        transform: translateY(26px);
+        transition:
+          opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+          transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .reveal.in {
+        opacity: 1;
+        transform: none;
+      }
+      .stagger > * {
+        opacity: 0;
+        transform: translateY(22px);
+        transition:
+          opacity 0.6s cubic-bezier(0.2, 0.8, 0.2, 1),
+          transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .stagger.in > *:nth-child(1) {
+        transition-delay: 0.05s;
+      }
+      .stagger.in > *:nth-child(2) {
+        transition-delay: 0.13s;
+      }
+      .stagger.in > *:nth-child(3) {
+        transition-delay: 0.21s;
+      }
+      .stagger.in > *:nth-child(4) {
+        transition-delay: 0.29s;
+      }
+      .stagger.in > * {
+        opacity: 1;
+        transform: none;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal,
+        .stagger > * {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+        html {
+          scroll-behavior: auto;
+        }
+      }
+      @media (max-width: 640px) {
+        .topbar .toc {
+          display: none;
+        }
+        .concept-head .c-emoji {
+          font-size: 1.6rem;
+        }
+        .hero {
+          padding-top: 4.5rem;
+        }
+      }
+
+      /* ===== שכבת השדרוג — "הקפצה" ===== */
+      :root {
+        --bg: #090b16;
+        --panel: #12131f;
+      }
+      body {
+        background:
+          radial-gradient(
+            1200px 820px at 50% -12%,
+            #15182f 0%,
+            transparent 55%
+          ),
+          var(--bg);
+      }
+      .aurora {
+        position: fixed;
+        inset: -25%;
+        z-index: 0;
+        pointer-events: none;
+        filter: blur(90px);
+        opacity: 0.55;
+      }
+      .aurora span {
+        position: absolute;
+        display: block;
+        border-radius: 50%;
+      }
+      .aurora .a1 {
+        width: 46vw;
+        height: 46vw;
+        top: -4%;
+        inset-inline-end: 6%;
+        background: radial-gradient(
+          circle,
+          rgba(201, 154, 60, 0.32),
+          transparent 70%
+        );
+        animation: drift1 22s ease-in-out infinite;
+      }
+      .aurora .a2 {
+        width: 40vw;
+        height: 40vw;
+        bottom: 0%;
+        inset-inline-start: 2%;
+        background: radial-gradient(
+          circle,
+          rgba(234, 197, 110, 0.2),
+          transparent 70%
+        );
+        animation: drift2 28s ease-in-out infinite;
+      }
+      .aurora .a3 {
+        width: 34vw;
+        height: 34vw;
+        top: 36%;
+        inset-inline-start: 40%;
+        background: radial-gradient(
+          circle,
+          rgba(126, 98, 210, 0.14),
+          transparent 70%
+        );
+        animation: drift3 32s ease-in-out infinite;
+      }
+      @keyframes drift1 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(-4%, 6%) scale(1.12);
+        }
+      }
+      @keyframes drift2 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(5%, -5%) scale(1.1);
+        }
+      }
+      @keyframes drift3 {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        50% {
+          transform: translate(-6%, -4%) scale(1.15);
+        }
+      }
+      .spotlight {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        background: radial-gradient(
+          440px at var(--mx, 50%) var(--my, 18%),
+          rgba(234, 197, 110, 0.1),
+          transparent 72%
+        );
+      }
+      .hero h1 .gold {
+        background: linear-gradient(
+          110deg,
+          #9c6b28 0%,
+          #eac56e 34%,
+          #fff4d6 50%,
+          #eac56e 66%,
+          #c99a3c 100%
+        );
+        background-size: 250% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 6.5s linear infinite;
+        filter: drop-shadow(0 0 28px rgba(234, 197, 110, 0.28));
+      }
+      @keyframes shimmer {
+        to {
+          background-position: 250% center;
+        }
+      }
+      .concept-head .c-emoji {
+        display: grid;
+        place-items: center;
+        width: 3rem;
+        height: 3rem;
+        font-size: 1.5rem;
+        border-radius: 14px;
+        background: radial-gradient(
+          circle at 30% 25%,
+          rgba(234, 197, 110, 0.2),
+          rgba(234, 197, 110, 0.04)
+        );
+        border: 1px solid rgba(234, 197, 110, 0.24);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      }
+      .concept {
+        position: relative;
+        overflow: hidden;
+      }
+      .concept::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        inset-inline: 0;
+        height: 2px;
+        background: var(--gold-grad);
+        transform: scaleX(0);
+        transform-origin: right;
+        transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+      }
+      .concept:hover::before {
+        transform: scaleX(1);
+      }
+      .concept:hover {
+        transform: translateY(-4px);
+        border-color: rgba(234, 197, 110, 0.45);
+        box-shadow: 0 30px 72px -44px rgba(201, 154, 60, 0.72);
+      }
+      .toc a.active {
+        box-shadow: 0 6px 22px -8px rgba(234, 197, 110, 0.6);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .aurora .a1,
+        .aurora .a2,
+        .aurora .a3 {
+          animation: none;
+        }
+        .hero h1 .gold {
+          animation: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="atmosphere"></div>
+    <div class="aurora">
+      <span class="a1"></span><span class="a2"></span><span class="a3"></span>
+    </div>
+    <div class="grain"></div>
+    <div class="spotlight" id="spot"></div>
+    <div class="progress"><i id="bar"></i></div>
+
+    <nav class="topbar">
+      <div class="topbar-inner">
+        <span class="brand">Tal Bsore</span>
+        <div class="toc">
+          <a href="#l1">איפה עובדים</a>
+          <a href="#l2">מי עוזר לי</a>
+          <a href="#l3">מה יש במחשב</a>
+          <a href="#l4">איך שומרים הכל</a>
+          <a href="#summary">סיכום</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="wrap">
+      <header class="hero">
+        <div class="wordmark reveal">Tal Bsore</div>
+        <div class="eyebrow reveal">מילון הממשק</div>
+        <h1 class="reveal">
+          כל המילים המוזרות,<br /><span class="gold">בעברית פשוטה</span>
+        </h1>
+        <p class="lead reveal">
+          לא נלמד כאן פקודות. רק נסביר, במילים של בן אדם, מה כל דבר שאתם רואים
+          ושומעים על המסך — כדי שתפסיקו לפחד מהמסך השחור.
+        </p>
+        <div class="meta reveal">17 מושגים · 4 שכבות · אפס קוד</div>
+      </header>
+
+      <section>
+        <p class="eyebrow reveal" style="margin-bottom: 1.2rem">
+          מפת המסע — איך הכול מתחבר
+        </p>
+        <div class="map stagger">
+          <a href="#l1"
+            ><span class="n">01</span>
+            <div class="t">🏠 איפה עובדים</div>
+            <div class="w">VS Code · Terminal · מקומי/בענן · Node</div></a
+          >
+          <a href="#l2"
+            ><span class="n">02</span>
+            <div class="t">🤝 מי עוזר לי</div>
+            <div class="w">Claude Code · המודל</div></a
+          >
+          <a href="#l3"
+            ><span class="n">03</span>
+            <div class="t">📁 מה יש במחשב</div>
+            <div class="w">
+              קובץ · .md · CLAUDE.md · .env · תיקייה · פרויקט
+            </div></a
+          >
+          <a href="#l4"
+            ><span class="n">04</span>
+            <div class="t">🔐 איך שומרים הכל</div>
+            <div class="w">Git · Commit · GitHub · Repo · Push</div></a
+          >
+        </div>
+        <p class="lead reveal" style="font-size: 1rem; max-width: 60ch">
+          כל מושג בנוי אותו דבר: <span class="gold">מה זה</span> ←
+          <span class="gold">כמו ש...</span> ←
+          <span class="gold">מתי תפגשו אותו</span>.
+        </p>
+      </section>
+
+      <section class="layer" id="l1">
+        <div class="layer-head reveal">
+          <span class="big">01</span>
+          <span class="eyebrow label">שכבה ראשונה</span>
+          <h2>🏠 איפה אתם עובדים</h2>
+          <p class="note">החדר, השולחן, והבית של Claude.</p>
+        </div>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">🖥️</span>
+            <div>
+              <span class="c-name">VS Code</span
+              ><span class="c-sub">החדר שבו עובדים</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>התוכנה שפותחים על המחשב כדי לעבוד. החדר שבו הכול קורה.</p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                Word הוא החדר שבו כותבים מסמך — VS Code הוא החדר שבו עובדים עם
+                Claude ועם הקבצים שלכם.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>כל פעם שתתחילו לעבוד. פותחים את VS Code — וממנו הכול מתחיל.</p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">⌨️</span>
+            <div>
+              <span class="c-name">Terminal (טרמינל)</span
+              ><span class="c-sub">הבית של Claude Code</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                החלון שבו Claude Code חי ועובד — המקום שבו <b>הוא</b> מריץ את כל
+                הפקודות שאתם מבקשים ממנו.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                המטבח של מסעדה. אתם מזמינים את המנה (מבקשים מ-Claude), והשף נכנס
+                למטבח ומבשל — בלי שתצטרכו להיכנס למטבח בעצמכם.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                תראו אותו עובד — טקסט רץ בחלון בזמן ש-Claude מבצע את הבקשה. זה
+                תקין, זה פשוט הוא עובד. אתם לא צריכים לכתוב שם כלום בעצמכם.
+              </p>
+            </div>
+            <div class="callout">
+              <span class="ct">😌 אל תדאגו — זה לא בשבילכם לכתוב קוד</span>
+              <p>
+                אתם <b>לא</b> מתכנתים, ו<b>לא</b> צריכים לכתוב שורות קוד בטרמינל
+                כדי שדברים ירוצו. אתם פשוט כותבים ל-Claude Code, במילים שלכם, מה
+                אתם רוצים — <b>והוא</b> מריץ את הפקודות בטרמינל בשבילכם. ואם הוא
+                מבקש מכם להריץ משהו? פשוט אמרו לו: <b>"תריץ אתה"</b> — והוא יעשה
+                את זה. הטרמינל הוא שלו לעבוד בו, לא שלכם.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">☁️</span>
+            <div>
+              <span class="c-name">מקומי (לוקאלי) מול בענן</span
+              ><span class="c-sub">איפה Claude באמת רץ</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                שתי דרכים להפעיל את Claude — על המחשב שלכם ממש
+                (<strong>מקומי</strong>), או על מחשב מרוחק של Anthropic שניגשים
+                אליו מהדפדפן (<strong>בענן</strong>).
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                עובד שיושב פיזית במשרד שלכם וניגש לארונות שלכם (מקומי) — לעומת
+                עובד שיושב במשרד אחר ועובד על עותק של התיקים ששלחתם לו (בענן).
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">ההבדל בפועל</span>
+              <table class="mini-table">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>🖥️ מקומי</th>
+                    <th>☁️ בענן</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>על אילו קבצים</td>
+                    <td>האמיתיים, על המחשב</td>
+                    <td>עותק מ-GitHub</td>
+                  </tr>
+                  <tr>
+                    <td>המחשב דלוק?</td>
+                    <td>חייב</td>
+                    <td>לא צריך</td>
+                  </tr>
+                  <tr>
+                    <td>מאיפה ניגשים</td>
+                    <td>VS Code במחשב</td>
+                    <td>דפדפן / טלפון</td>
+                  </tr>
+                  <tr>
+                    <td>מתאים ל...</td>
+                    <td>עבודה רגילה, הסדנה</td>
+                    <td>עבודה מהדרך</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                בסדנה אתם עובדים <strong>מקומי</strong> — הכי פשוט, הקבצים
+                מולכם. הענן הוא שדרוג להמשך, כשרוצים לעבוד מהטלפון או בלי שהמחשב
+                תפוס.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">⚙️</span>
+            <div>
+              <span class="c-name">Node</span
+              ><span class="c-sub">המנוע ברקע</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>מנוע ש"רץ" מתחת לפני השטח ומאפשר ל-Claude Code לעבוד.</p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                מנוע ברכב — אף פעם לא רואים אותו, לא נוגעים בו, אבל בלעדיו האוטו
+                לא זז.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                כמעט אף פעם. הותקן פעם אחת בהתקנה, ומאז פשוט עובד ברקע. טוב לדעת
+                שהוא שם.
+              </p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="layer" id="l2">
+        <div class="layer-head reveal">
+          <span class="big">02</span>
+          <span class="eyebrow label">שכבה שנייה</span>
+          <h2>🤝 מי עוזר לכם</h2>
+          <p class="note">העובד שמולכם, והמוח שבחרתם לו.</p>
+        </div>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">🤖</span>
+            <div>
+              <span class="c-name">Claude Code</span
+              ><span class="c-sub">העובד שמבצע בשבילכם</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                העוזר עצמו. לא סתם בוט שמייעץ — עובד שמבצע. כותב, מתקן, פותח
+                קבצים, בונה דברים בשבילכם.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                עובד חדש שיושב מולכם, שאתם מסבירים לו מה צריך — והוא עושה.
+                ההבדל: הוא לא הולך הביתה ולא שוכח.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                זה הלב של הכול. כל מה שתבקשו — תבקשו ממנו בעברית רגילה, והוא
+                יבצע. (איפה הוא מבצע את העבודה? בטרמינל — חדר העבודה שלו.)
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">🧠</span>
+            <div>
+              <span class="c-name">המודל (Opus / Sonnet / Haiku)</span
+              ><span class="c-sub">המוח של העוזר</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                ה"מוח" שבחרתם לעוזר. יש כמה רמות: חכם ויסודי (Opus), מהיר ומאוזן
+                (Sonnet), זריז וקליל (Haiku).
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                אותו עובד, אבל אתם בוחרים אם הוא עובד במצב "ריכוז מלא" או "מהיר
+                וקליל". משימה מורכבת — מוח חזק. משימה פשוטה — מוח מהיר.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                כשתכתבו <b>/model</b> ותבחרו. ההמלצה לסדנה:
+                <strong>Opus</strong> — החזק ביותר.
+              </p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="layer" id="l3">
+        <div class="layer-head reveal">
+          <span class="big">03</span>
+          <span class="eyebrow label">שכבה שלישית</span>
+          <h2>📁 מה יש לכם במחשב</h2>
+          <p class="note">מהדבר הקטן ביותר ועד עבודה שלמה.</p>
+        </div>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">📄</span>
+            <div>
+              <span class="c-name">קובץ (File)</span
+              ><span class="c-sub">דף בודד</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                פריט בודד — מסמך, תמונה, שורת קוד. הדבר הכי קטן שעובדים עליו.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>דף בודד בקלסר.</p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                כל הזמן. כשתבקשו מ-Claude "תכתוב לי..." או "תתקן את...", הוא
+                עובד על קובץ.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">📝</span>
+            <div>
+              <span class="c-name">קובץ .md (Markdown)</span
+              ><span class="c-sub">מסמך טקסט קליל</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                סוג קובץ טקסט פשוט שאפשר להוסיף בו עיצוב קל — כותרות, רשימות,
+                הדגשות — בלי תוכנה מסובכת.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                דף Word, אבל קליל וגמיש, שכל מחשב פותח בקלות. (גם המדריך הזה הוא
+                קובץ .md.)
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                רוב המסמכים שתעבדו עליהם עם Claude הם .md — זה הפורמט שהוא הכי
+                אוהב לכתוב ולקרוא בו.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">📋</span>
+            <div>
+              <span class="c-name">CLAUDE.md</span
+              ><span class="c-sub">תיק החפיפה של Claude</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                קובץ .md <strong>מיוחד</strong> ש-Claude קורא
+                <strong>אוטומטית</strong> בכל פעם שהוא מתחיל לעבוד בפרויקט. שם
+                רושמים לו, פעם אחת, את כל מה שחשוב שידע — על העסק, על הסגנון, על
+                הכללים.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                תיק חפיפה לעובד חדש. במקום להסביר כל בוקר מי הלקוחות ואיך עובדים
+                כאן — כותבים פעם אחת, והעובד קורא לבד וכבר יודע.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                בהמשך נבנה לכם CLAUDE.md משלכם — קובץ שמתאר את העסק שלכם,
+                הלקוחות וטון הדיבור. מאותו רגע, Claude "מכיר" את העסק בלי
+                שתצטרכו להסביר כל פעם מחדש. זה ההבדל בין עוזר זר לבין עובד שכבר
+                עבר חפיפה.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">🔑</span>
+            <div>
+              <span class="c-name">.env (קובץ הסודות)</span
+              ><span class="c-sub">כספת המפתחות</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                קובץ קטן וסודי שבו שומרים את כל ה"מפתחות" — הטוקנים והסיסמאות
+                שמחברים את Claude לשירותים חיצוניים (וואטסאפ, חשבוניות, Make).
+                במקום לכתוב את הסוד בתוך הקוד, שמים אותו ב-<b>.env</b>, ו-Claude
+                קורא אותו משם.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                צרור המפתחות של העסק. מי שמחזיק בו נכנס לכל הדלתות — אז לא
+                משאירים אותו על השולחן, לא מצלמים, ולא שולחים בוואטסאפ.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                כשתחברו את Claude לשירות חיצוני (בוט, חשבוניות, אוטומציה). הטוקן
+                נכנס ל-<b>.env</b>, ו-Claude קורא אותו משם — בלי שהסוד מופיע
+                בקוד עצמו.
+              </p>
+            </div>
+            <div class="callout">
+              <span class="ct">⚠️ איך עובדים איתו נכון — קריטי</span>
+              <p>
+                הקובץ הכי רגיש שיש. שלושה כללי ברזל: <b>(1)</b> אף פעם לא מעלים
+                אותו ל-GitHub — יש קובץ מיוחד בשם <b>.gitignore</b> שאומר ל-Git
+                "את <b>.env</b> תתעלם, אל תשלח לענן לעולם". <b>(2)</b> לא
+                משתפים, לא שולחים, לא מצלמים את התוכן. <b>(3)</b> אם טוקן נחשף
+                בטעות — מבטלים אותו מיד ומוציאים חדש. דליפה של <b>.env</b> =
+                מישהו זר נכנס לכל המערכות שלכם בבת אחת.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">🗂️</span>
+            <div>
+              <span class="c-name">תיקייה (Folder)</span
+              ><span class="c-sub">קופסה של קבצים</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>קופסה שמכילה כמה קבצים יחד.</p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>מגירה בארון שבה שמים כמה דפים שקשורים זה לזה.</p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותה</span>
+              <p>
+                כשהעבודה שלכם מתחילה לגדול — מסדרים את הקבצים בתיקיות לפי נושא.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">📦</span>
+            <div>
+              <span class="c-name">פרויקט (Project)</span
+              ><span class="c-sub">עבודה אחת שלמה</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                התיקייה הראשית של עבודה אחת שלמה — עם כל הקבצים והתיקיות שלה.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                התיק המלא של לקוח אחד: כל המסמכים, החוזים והתכתובות שלו ביחד
+                במקום אחד.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                כשתפתחו משהו חדש לעבוד עליו — הסדנה, דף נחיתה, בוט — כל אחד הוא
+                פרויקט נפרד.
+              </p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="layer" id="l4">
+        <div class="layer-head reveal">
+          <span class="big">04</span>
+          <span class="eyebrow label">שכבה רביעית</span>
+          <h2>🔐 איך שומרים הכל</h2>
+          <p class="note">השכבה שהכי מבלבלת — נלך לאט.</p>
+        </div>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">🎞️</span>
+            <div>
+              <span class="c-name">Git (גיט)</span
+              ><span class="c-sub">מצלמת אבטחה לעבודה</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                מצלמת אבטחה לעבודה שלכם. שומרת תמונה של כל שלב — כדי שתמיד אפשר
+                לחזור אחורה.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                כפתור "בטל" (Undo) בלי הגבלה. לא רק הפעולה האחרונה — אלא כל גרסה
+                שהייתה אי-פעם, מסודרת לפי זמן.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                הוא עובד ברקע. לא חייבים לגעת בו — אבל בזכותו אף שינוי לא הולך
+                לאיבוד, וגם אם משהו מתקלקל, אפשר לחזור לרגע שבו הכול עבד.
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">📸</span>
+            <div>
+              <span class="c-name">Commit (קומיט)</span
+              ><span class="c-sub">נקודת שמירה</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                "צילום מצב" — נקודה שאתם שומרים ואומרים "לכאן אני יכול לחזור".
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                לשמור משחק במחשב לפני שלב קשה. אם נכשלתם — חוזרים לנקודת השמירה
+                במקום להתחיל מהתחלה.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                בכל פעם שסיימתם חתיכת עבודה משמעותית. Claude יכול לעשות את זה
+                בשבילכם — מספיק לבקש "תשמור נקודה".
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">☁️</span>
+            <div>
+              <span class="c-name">GitHub (גיטהאב)</span
+              ><span class="c-sub">הכספת בענן</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                אתר באינטרנט ששומר עותק של הפרויקטים שלכם — גיבוי בענן, מחוץ
+                למחשב.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                Google Drive או Dropbox, אבל לקוד ולפרויקטים. גם אם המחשב יישבר
+                או ייגנב — העבודה שמורה שם.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                כשתרצו לגבות פרויקט, לעבוד עליו מכמה מחשבים, או לשתף אותו.
+                (לדוגמה: סקריפט ההתקנה של הסדנה יושב ב-GitHub — ומשם התלמידים
+                מורידים אותו.)
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">🗄️</span>
+            <div>
+              <span class="c-name">Repo (ריפו)</span
+              ><span class="c-sub">הקלסר של פרויקט</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">בעברית פשוטה</span>
+              <p>
+                הקלסר של פרויקט אחד בתוך GitHub — עם כל הגרסאות הישנות שמורות
+                בפנים.
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">כמו ש...</span>
+              <p>
+                קלסר שלא שומר רק את הדף הנוכחי, אלא כל טיוטה שהייתה אי-פעם,
+                מסודרת לפי תאריך.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">מתי תפגשו אותו</span>
+              <p>
+                כל פרויקט שתעלו ל-GitHub יושב ב-repo משלו. כשמישהו אומר "תכניס
+                את זה ל-repo" — הכוונה: "תשים את הפרויקט הזה בקלסר שלו בענן".
+              </p>
+            </div>
+          </div>
+        </article>
+
+        <div class="bridge reveal">
+          <b>מילה אחת על הבלבול הכי נפוץ:</b>&nbsp; <b>Git ≠ GitHub.</b><br /><b
+            >Git</b
+          >
+          = מצלמת האבטחה במחשב שלכם (מקומי). <b>GitHub</b> = הכספת באינטרנט
+          (בענן). Git עובד גם בלי אינטרנט; ל-GitHub מעלים כשרוצים גיבוי בענן.
+        </div>
+
+        <article class="concept reveal">
+          <header class="concept-head">
+            <span class="c-emoji">⬆️</span>
+            <div>
+              <span class="c-name">Push — מתי ולמה מעלים</span
+              ><span class="c-sub">להעלות מהמחשב לענן</span>
+            </div>
+          </header>
+          <div class="c-body">
+            <div class="bit">
+              <span class="label">תוך כדי עבודה</span>
+              <p>
+                Git (המצלמה במחשב) שומר הכול אוטומטית. לא צריך אינטרנט, לא צריך
+                כלום.
+              </p>
+            </div>
+            <div class="bit">
+              <span class="label">בסוף יום / סיום שלב / רוצים גיבוי</span>
+              <p>
+                מעלים ל-GitHub. הפעולה נקראת <strong>Push</strong> ("דחיפה" —
+                דוחפים את העותק מהמחשב אל הענן).
+              </p>
+            </div>
+            <div class="bit analogy">
+              <span class="label">חוק האצבע</span>
+              <p>
+                אם המחשב שלכם ייעלם עכשיו — מה שלא העליתם ל-GitHub קיים רק בו.
+                סיימתם משהו שחשוב לכם? תעלו לענן. ואת זה לא צריך לעשות לבד —
+                פשוט בקשו מ-Claude: <strong>"תעלה את זה ל-GitHub"</strong>.
+              </p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="summary" id="summary">
+        <div class="layer-head reveal" style="padding-top: 0">
+          <span class="eyebrow label">⚡ סיכום מהיר</span>
+          <h2>כששומעים את המילה — נזכרים</h2>
+        </div>
+        <table class="sum-table reveal">
+          <tbody>
+            <tr>
+              <td>VS Code</td>
+              <td>החדר שבו עובדים</td>
+            </tr>
+            <tr>
+              <td>Terminal</td>
+              <td>הבית של Claude — שם הוא מריץ את הפקודות</td>
+            </tr>
+            <tr>
+              <td>מקומי / בענן</td>
+              <td>מקומי = על המחשב שלכם · בענן = על שרת מרוחק, מהדפדפן</td>
+            </tr>
+            <tr>
+              <td>Node</td>
+              <td>המנוע מתחת, עובד לבד ברקע</td>
+            </tr>
+            <tr>
+              <td>Claude Code</td>
+              <td>העובד שמבצע בשבילכם</td>
+            </tr>
+            <tr>
+              <td>מודל (Opus)</td>
+              <td>המוח שבחרתם לעובד</td>
+            </tr>
+            <tr>
+              <td>קובץ</td>
+              <td>דף בודד</td>
+            </tr>
+            <tr>
+              <td>קובץ .md</td>
+              <td>מסמך טקסט פשוט עם עיצוב קל (כמו דף Word קליל)</td>
+            </tr>
+            <tr>
+              <td>CLAUDE.md</td>
+              <td>תיק החפיפה של Claude — מה שהוא יודע על העסק שלכם</td>
+            </tr>
+            <tr>
+              <td>.env</td>
+              <td>כספת הסודות — טוקנים וסיסמאות. אף פעם לא ל-GitHub</td>
+            </tr>
+            <tr>
+              <td>תיקייה</td>
+              <td>מגירה עם כמה דפים</td>
+            </tr>
+            <tr>
+              <td>פרויקט</td>
+              <td>התיק המלא של עבודה אחת</td>
+            </tr>
+            <tr>
+              <td>Git</td>
+              <td>מצלמת אבטחה במחשב — חזרה אחורה תמיד</td>
+            </tr>
+            <tr>
+              <td>Commit</td>
+              <td>צילום מצב / נקודת שמירה</td>
+            </tr>
+            <tr>
+              <td>GitHub</td>
+              <td>כספת גיבוי בענן</td>
+            </tr>
+            <tr>
+              <td>Repo</td>
+              <td>הקלסר של פרויקט אחד בענן</td>
+            </tr>
+            <tr>
+              <td>Push</td>
+              <td>להעלות מהמחשב אל הענן</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="closing reveal">
+        <span class="seal">✨ נבנה ב-Claude Code ✨</span>
+        <h2>
+          אתם לא צריכים לזכור פקודות. רק להבין מה כל דבר
+          <span class="gold">עושה</span> — ואת השאר לבקש מ-Claude במילים שלכם.
+        </h2>
+        <div class="wordmark">Tal Bsore</div>
+      </section>
+    </div>
+
+    <script>
+      // spotlight follows cursor
+      const spot = document.getElementById("spot");
+      addEventListener(
+        "pointermove",
+        (e) => {
+          spot.style.setProperty("--mx", e.clientX + "px");
+          spot.style.setProperty("--my", e.clientY + "px");
+        },
+        { passive: true },
+      );
+
+      const bar = document.getElementById("bar");
+      function onScroll() {
+        const h = document.documentElement;
+        const max = h.scrollHeight - h.clientHeight;
+        const pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+        bar.style.width = pct + "%";
+      }
+      addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("in");
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      );
+      document
+        .querySelectorAll(".reveal, .stagger")
+        .forEach((el) => io.observe(el));
+
+      const links = [...document.querySelectorAll(".toc a")];
+      const sections = links
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      const spy = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              const id = "#" + e.target.id;
+              links.forEach((a) =>
+                a.classList.toggle("active", a.getAttribute("href") === id),
+              );
+            }
+          });
+        },
+        { threshold: 0.2, rootMargin: "-30% 0px -60% 0px" },
+      );
+      sections.forEach((s) => spy.observe(s));
+    </script>
+  </body>
+</html>
