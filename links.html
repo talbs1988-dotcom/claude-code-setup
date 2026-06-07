@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>סדנת Claude Code Business — כל הקישורים וההתקנות</title>
+    <meta
+      name="description"
+      content="כל מה שצריך לסדנת Claude Code Business של טל בשור — התקנות, חשבונות וקישורים, במקום אחד."
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --gold-1: #9c6b28;
+        --gold-2: #eac56e;
+        --gold-soft: #d8b56a;
+        --bg: #0e0f13;
+        --bg-2: #15171d;
+        --card: #1b1e26;
+        --card-2: #20242e;
+        --line: #2c313d;
+        --txt: #f2efe8;
+        --muted: #9aa0ad;
+        --grad: linear-gradient(120deg, #9c6b28 0%, #eac56e 55%, #9c6b28 100%);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Rubik", sans-serif;
+        background: var(--bg);
+        color: var(--txt);
+        line-height: 1.7;
+        padding: 0 0 80px;
+        -webkit-font-smoothing: antialiased;
+      }
+      .hero {
+        text-align: center;
+        padding: 64px 24px 40px;
+        background: radial-gradient(
+          80% 120% at 50% -10%,
+          rgba(234, 197, 110, 0.12) 0%,
+          transparent 60%
+        );
+        border-bottom: 1px solid var(--line);
+      }
+      .logo {
+        font-weight: 900;
+        font-size: 15px;
+        letter-spacing: 6px;
+        text-transform: uppercase;
+        background: var(--grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        margin-bottom: 22px;
+      }
+      .hero h1 {
+        font-size: clamp(27px, 5vw, 44px);
+        font-weight: 700;
+        margin-bottom: 14px;
+        line-height: 1.25;
+      }
+      .hero h1 span {
+        background: var(--grad);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      .hero p {
+        color: var(--muted);
+        font-size: 17px;
+        max-width: 640px;
+        margin: 0 auto;
+      }
+      .wrap {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 0 24px;
+      }
+      section {
+        margin-top: 48px;
+      }
+      .sec-head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .sec-head .ico {
+        font-size: 24px;
+      }
+      .sec-head h2 {
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .sec-head .sub {
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 400;
+        margin-right: auto;
+      }
+      /* install */
+      .install-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .cmd-card {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 22px;
+        position: relative;
+        overflow: hidden;
+      }
+      .cmd-card::before {
+        content: "";
+        position: absolute;
+        inset: 0 0 auto 0;
+        height: 3px;
+        background: var(--grad);
+      }
+      .cmd-card h3 {
+        font-size: 18px;
+        margin-bottom: 6px;
+      }
+      .cmd-card .hint {
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 14px;
+      }
+      .code {
+        background: #0a0b0e;
+        border: 1px solid var(--line);
+        border-radius: 10px;
+        padding: 14px;
+        direction: ltr;
+        text-align: left;
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+        font-size: 12.5px;
+        color: #d6e3c8;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+      .copy-btn {
+        margin-top: 12px;
+        width: 100%;
+        border: none;
+        cursor: pointer;
+        border-radius: 10px;
+        padding: 11px;
+        font-family: "Rubik";
+        font-weight: 600;
+        font-size: 14px;
+        color: #1a1205;
+        background: var(--grad);
+        transition:
+          filter 0.12s,
+          transform 0.12s;
+      }
+      .copy-btn:hover {
+        filter: brightness(1.08);
+      }
+      .copy-btn:active {
+        transform: scale(0.98);
+      }
+      .copy-btn.done {
+        background: #2e7d4f;
+        color: #fff;
+      }
+      /* presentation card */
+      .pres-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        text-decoration: none;
+        color: inherit;
+        background: var(--card);
+        border: 1px solid var(--gold-soft);
+        border-radius: 14px;
+        padding: 20px 22px;
+        transition:
+          transform 0.15s,
+          background 0.15s;
+      }
+      .pres-card:hover {
+        transform: translateY(-2px);
+        background: var(--card-2);
+      }
+      .pres-card .emoji {
+        font-size: 30px;
+      }
+      .pres-card .t {
+        font-weight: 600;
+        font-size: 17px;
+      }
+      .pres-card .d {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      /* link groups */
+      .group {
+        margin-bottom: 30px;
+      }
+      .group > h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 14px;
+        padding-right: 4px;
+        color: var(--gold-soft);
+      }
+      .group-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .litem {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 14px;
+        padding: 16px 18px;
+        transition: border-color 0.15s;
+      }
+      .litem:hover {
+        border-color: var(--gold-soft);
+      }
+      .litem .top {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+      }
+      .litem .emoji {
+        font-size: 23px;
+        line-height: 1;
+        flex-shrink: 0;
+      }
+      .litem .name {
+        font-weight: 600;
+        font-size: 16px;
+        margin-bottom: 2px;
+      }
+      .litem .purpose {
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .litem .open {
+        display: inline-block;
+        margin-top: 10px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #1a1205;
+        background: var(--grad);
+        border-radius: 8px;
+        padding: 7px 14px;
+        text-decoration: none;
+      }
+      .litem details {
+        margin-top: 11px;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+      .litem summary {
+        cursor: pointer;
+        font-size: 13px;
+        color: var(--gold-soft);
+        font-weight: 500;
+        list-style: none;
+      }
+      .litem summary::-webkit-details-marker {
+        display: none;
+      }
+      .litem summary::before {
+        content: "▾ ";
+        font-size: 11px;
+      }
+      .litem details[open] summary::before {
+        content: "▴ ";
+      }
+      .litem .how {
+        margin-top: 9px;
+        font-size: 13px;
+        color: var(--txt);
+        line-height: 1.65;
+      }
+      .note {
+        background: linear-gradient(
+          120deg,
+          rgba(156, 107, 40, 0.14),
+          rgba(234, 197, 110, 0.06)
+        );
+        border: 1px solid var(--line);
+        border-right: 3px solid var(--gold-soft);
+        border-radius: 12px;
+        padding: 16px 20px;
+        font-size: 14.5px;
+        margin-top: 18px;
+      }
+      .note b {
+        color: var(--gold-soft);
+      }
+      footer {
+        text-align: center;
+        color: var(--muted);
+        font-size: 13px;
+        margin-top: 64px;
+      }
+      @media (max-width: 680px) {
+        .install-grid,
+        .group-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hero">
+      <div class="logo">Tal Bsore</div>
+      <h1>סדנת <span>Claude Code Business</span></h1>
+      <p>
+        כל מה שצריך לסדנה — ההתקנות, החשבונות והקישורים. במקום אחד, בלי לחפש.
+      </p>
+    </div>
+
+    <div class="wrap">
+      <!-- התקנה -->
+      <section>
+        <div class="sec-head">
+          <span class="ico">⚙️</span>
+          <h2>ההתקנה בפקודה אחת</h2>
+          <span class="sub">מעתיקים → מדביקים → Enter</span>
+        </div>
+        <div class="install-grid">
+          <div class="cmd-card">
+            <h3>🍎 Mac</h3>
+            <div class="hint">
+              פותחים <b>Terminal</b> (Cmd+רווח → Terminal) ומדביקים:
+            </div>
+            <div class="code" id="mac-cmd">
+              curl -fsSL
+              https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-mac.command
+              | bash
+            </div>
+            <button class="copy-btn" data-copy="mac-cmd">
+              📋 העתק פקודת Mac
+            </button>
+          </div>
+          <div class="cmd-card">
+            <h3>🪟 Windows</h3>
+            <div class="hint">פותחים <b>PowerShell</b> ומדביקים:</div>
+            <div class="code" id="win-cmd">
+              irm
+              https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-windows.ps1
+              | iex
+            </div>
+            <button class="copy-btn" data-copy="win-cmd">
+              📋 העתק פקודת Windows
+            </button>
+          </div>
+        </div>
+        <div class="note">
+          <b>מה מותקן:</b> VS Code · Node · Claude Code · תוסף Claude · תוסף RTL
+          (עברית). ב-Mac גם Git מובנה. מי שמעדיף להתקין ידנית — הקישורים למטה.
+        </div>
+      </section>
+
+      <!-- מצגת -->
+      <section>
+        <div class="sec-head">
+          <span class="ico">🎬</span>
+          <h2>המצגת</h2>
+        </div>
+        <a
+          class="pres-card"
+          href="https://talbs1988-dotcom.github.io/claude-code-setup/presentation/index.html"
+          target="_blank"
+        >
+          <span class="emoji">🎬</span>
+          <span
+            ><span class="t">מצגת הקדמה — "על מה אנחנו מורידים ולמה"</span
+            ><br /><span class="d"
+              >6 שקופיות · להבין את התמונה לפני שמתחילים</span
+            ></span
+          >
+        </a>
+      </section>
+
+      <!-- מילון -->
+      <section>
+        <div class="sec-head">
+          <span class="ico">📖</span>
+          <h2>מילון הממשק</h2>
+        </div>
+        <a
+          class="pres-card"
+          href="https://talbs1988-dotcom.github.io/claude-code-setup/glossary.html"
+          target="_blank"
+        >
+          <span class="emoji">📖</span>
+          <span
+            ><span class="t">כל מושגי Claude Code בעברית פשוטה</span><br /><span
+              class="d"
+              >לא בטוחים מה זה Terminal / סוכן / CLAUDE.md? הכל כאן</span
+            ></span
+          >
+        </a>
+      </section>
+
+      <!-- קישורים -->
+      <section>
+        <div class="sec-head">
+          <span class="ico">🔗</span>
+          <h2>כל הקישורים — להוריד ולהתחבר</h2>
+          <span class="sub">לחצו "איך נכנסים" לכל אחד</span>
+        </div>
+        <div id="links-root"></div>
+      </section>
+
+      <footer>טל בשור — הנדסת עסקים · סדנת Claude Code Business</footer>
+    </div>
+
+    <script>
+      var LINKS = [
+        {
+          g: "🔑 חשבונות לפתוח",
+          e: "🤖",
+          t: "חשבון Claude",
+          u: "https://claude.ai/login",
+          p: "הבסיס — כאן פותחים חשבון לכל הקורס",
+          h: "נכנסים ל-claude.ai/login → לוחצים 'המשך עם Google' (הכי מהיר) או מקלידים אימייל ומקבלים קוד אימות. אותו מסך משמש גם להרשמה וגם להתחברות.",
+        },
+        {
+          g: "🔑 חשבונות לפתוח",
+          e: "🐙",
+          t: "GitHub",
+          u: "https://github.com/signup",
+          p: "שם יושבים קודי ההתקנה, ושם שומרים עבודה",
+          h: "פתיחת חשבון: github.com/signup → אימייל, סיסמה, שם משתמש, ואימות במייל. כבר יש חשבון? github.com/login. שימו לב: אין כניסה דרך Google — מתחברים עם האימייל והסיסמה שבחרתם.",
+        },
+        {
+          g: "🔑 חשבונות לפתוח",
+          e: "🟦",
+          t: "חשבון Google",
+          u: "https://accounts.google.com/signup",
+          p: "הבסיס לכל החיבורים (Drive, יומן, מייל)",
+          h: "accounts.google.com/signup → פותחים חשבון Google חינמי. בלעדיו אי אפשר לחבר את הדרייב והיומן לקלוד.",
+        },
+
+        {
+          g: "🖥️ התקנות (למי שלא הריץ את הפקודה)",
+          e: "💻",
+          t: "VS Code",
+          u: "https://code.visualstudio.com/download",
+          p: "התוכנה שבתוכה Claude Code עובד",
+          h: "נכנסים לדף ההורדה → בוחרים Mac (אם יש ספק: Universal) או Windows → פותחים את הקובץ שירד ומתקינים (במק גוררים את האייקון ל-Applications, בווינדוס 'הבא-הבא'). נפתח בלי שם משתמש.",
+        },
+        {
+          g: "🖥️ התקנות (למי שלא הריץ את הפקודה)",
+          e: "⚙️",
+          t: "Node.js",
+          u: "https://nodejs.org/en/download",
+          p: "המנוע ש-Claude Code רץ עליו",
+          h: "בדף ההורדה בוחרים את הגרסה עם התווית LTS (היציבה) → בוחרים מערכת הפעלה → מתקינים 'הבא-הבא'. בדיקה: בטרמינל מקלידים node -v — אם חוזר מספר, הצליח.",
+        },
+        {
+          g: "🖥️ התקנות (למי שלא הריץ את הפקודה)",
+          e: "🔤",
+          t: "תוסף RTL לעברית",
+          u: "https://marketplace.visualstudio.com/items?itemName=yechielby.claude-code-rtl",
+          p: "מסדר עברית מימין לשמאל בעורך",
+          h: "ב-VS Code: אייקון התוספים (Extensions) משמאל → מחפשים 'Claude Code RTL' → Install (של yechielby) → פותחים מחדש. דרך מהירה: פשוט בקשו מ-Claude Code 'תתקין לי את תוסף ה-RTL'.",
+        },
+        {
+          g: "🖥️ התקנות (למי שלא הריץ את הפקודה)",
+          e: "📘",
+          t: "מדריך ההתקנה הרשמי",
+          u: "https://code.claude.com/docs/en/overview",
+          p: "גיבוי רשמי אם משהו נתקע",
+          h: "הדף הרשמי של Claude Code עם פקודות ההתקנה והסברים — שימושי כשמשהו בהתקנה לא עובד וצריך לבדוק מאיפה הכל בא.",
+        },
+
+        {
+          g: "🔌 חיבורים — Claude והקבצים שלך",
+          e: "🔗",
+          t: "Composio",
+          u: "https://dashboard.composio.dev",
+          p: "מחבר את Drive / Sheets / Docs ל-Claude",
+          h: "נכנסים ל-dashboard.composio.dev → הרשמה (אפשר עם Google בלחיצה) → אזור האפליקציות (Apps) → מחפשים Google Drive → Connect → מאשרים גישה. חוזרים ל-Claude — עכשיו הוא קורא את הקבצים שלכם.",
+        },
+        {
+          g: "🔌 חיבורים — Claude והקבצים שלך",
+          e: "📁",
+          t: "Google Drive",
+          u: "https://drive.google.com",
+          p: "גיבוי בענן + מקור מסמכים לקלוד",
+          h: "drive.google.com — מקום לגבות את העבודה (CLAUDE.md, מיפוי העסק) כדי שלא ילך לאיבוד, וגם מקום שקלוד יכול לקרוא ממנו דרך Composio.",
+        },
+        {
+          g: "🔌 חיבורים — Claude והקבצים שלך",
+          e: "🧩",
+          t: "Make.com",
+          u: "https://www.make.com",
+          p: "אוטומציות בלי קוד (מתקדם)",
+          h: "make.com — פלטפורמה שמחברת בין כלים בלי קוד. שימושי בהמשך לחיבור אוטומציות לעסק. אופציונלי, למתקדמים.",
+        },
+
+        {
+          g: "🤖 בוט הוואטסאפ (מפגש 4)",
+          e: "🔑",
+          t: "Anthropic Console",
+          u: "https://console.anthropic.com/settings/keys",
+          p: "מפתח ה-API שמפעיל את הבוט",
+          h: "console.anthropic.com (יקפיץ ל-platform.claude.com — תקין) → מתחברים עם חשבון Claude → API Keys → Create Key → שם כמו 'בוט וואטסאפ'. ⚠️ מעתיקים את המפתח מיד — הוא נראה רק פעם אחת! מדביקים בקובץ .env, לא שולחים בצ'אט ולא מעלים לגיטהאב.",
+        },
+        {
+          g: "🤖 בוט הוואטסאפ (מפגש 4)",
+          e: "🟢",
+          t: "Green API",
+          u: "https://console.green-api.com",
+          p: "מחבר את הוואטסאפ שלך לבוט",
+          h: "green-api.com → Console → הרשמה במייל → יוצרים Instance בחבילת Developer החינמית → מקבלים שני קודים (idInstance + apiTokenInstance) → סורקים QR מהטלפון (כמו וואטסאפ ווב). הוואטסאפ מחובר.",
+        },
+        {
+          g: "🤖 בוט הוואטסאפ (מפגש 4)",
+          e: "🗂️",
+          t: "Airtable",
+          u: "https://airtable.com/login",
+          p: "הזיכרון / בסיס הנתונים של הבוט",
+          h: "airtable.com → Sign in (אפשר עם Google) או Sign up. נפתח מסך טבלאות (Bases) — שם נשמר כל המידע שהבוט זוכר.",
+        },
+        {
+          g: "🤖 בוט הוואטסאפ (מפגש 4)",
+          e: "🚂",
+          t: "Railway",
+          u: "https://railway.com/",
+          p: "מריץ את הבוט בענן 24/7",
+          h: "railway.com — מעלים את הבוט לכאן כדי שירוץ בענן ולא ייפול כשהמחשב כבוי. אופציית הפריסה בענן של בוט הסדנה.",
+        },
+
+        {
+          g: "🎥 הקלטה",
+          e: "🎥",
+          t: "Zoom",
+          u: "https://zoom.us/signup",
+          p: "להקלטת המפגשים וצפייה חוזרת",
+          h: "zoom.us/signup — חשבון Zoom להקלטת מפגשי הסדנה ולשמירה, כדי לחזור על מה שלא הספקתם.",
+        },
+      ];
+
+      // render link groups
+      (function () {
+        var root = document.getElementById("links-root");
+        var order = [];
+        var byGroup = {};
+        LINKS.forEach(function (l) {
+          if (!byGroup[l.g]) {
+            byGroup[l.g] = [];
+            order.push(l.g);
+          }
+          byGroup[l.g].push(l);
+        });
+        order.forEach(function (g) {
+          var wrap = document.createElement("div");
+          wrap.className = "group";
+          var h = document.createElement("h3");
+          h.textContent = g;
+          wrap.appendChild(h);
+          var grid = document.createElement("div");
+          grid.className = "group-grid";
+          byGroup[g].forEach(function (l) {
+            var item = document.createElement("div");
+            item.className = "litem";
+            item.innerHTML =
+              '<div class="top"><span class="emoji">' +
+              l.e +
+              "</span>" +
+              '<div><div class="name">' +
+              l.t +
+              '</div><div class="purpose">' +
+              l.p +
+              "</div></div></div>" +
+              '<a class="open" href="' +
+              l.u +
+              '" target="_blank" rel="noopener">פתח ↗</a>' +
+              '<details><summary>איך נכנסים</summary><div class="how">' +
+              l.h +
+              "</div></details>";
+            grid.appendChild(item);
+          });
+          wrap.appendChild(grid);
+          root.appendChild(wrap);
+        });
+      })();
+
+      // copy buttons
+      document.querySelectorAll(".copy-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var txt = document
+            .getElementById(btn.dataset.copy)
+            .textContent.replace(/\s+/g, " ")
+            .trim();
+          navigator.clipboard.writeText(txt).then(function () {
+            var o = btn.textContent;
+            btn.textContent = "✓ הועתק!";
+            btn.classList.add("done");
+            setTimeout(function () {
+              btn.textContent = o;
+              btn.classList.remove("done");
+            }, 1600);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
