@@ -3,79 +3,131 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Claude Code Business — ההתקנות</title>
+    <title>Claude Code Business · מפגש 1</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
     <style>
       :root {
-        --bg: #0a0a0c;
-        --panel: #141219;
-        --gold-deep: #9c6b28;
-        --gold: #c99a3c;
-        --gold-light: #eac56e;
-        --gold-grad: linear-gradient(
-          120deg,
-          #9c6b28 0%,
-          #eac56e 48%,
-          #c99a3c 100%
-        );
-        --text: #f2ede3;
-        --dim: #9c948a;
-        --line: rgba(234, 197, 110, 0.16);
-        --font: "Rubik", sans-serif;
-        --mono: "JetBrains Mono", monospace;
+        --bg: #08080a;
+        --bg2: #0e0d10;
+        --panel: #141319;
+        --line: #2a2730;
+        --g1: #9c6b28;
+        --g2: #eac56e;
+        --g3: #c99a3c;
+        --txt: #f5f1e8;
+        --mut: #9d988e;
+        --green: #46a758;
+        --red: #e5484d;
       }
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
+      html,
       body {
-        background: var(--bg);
-        color: var(--text);
-        font-family: var(--font);
-        -webkit-font-smoothing: antialiased;
+        height: 100%;
         overflow: hidden;
+        background: var(--bg);
+        font-family: "Rubik", sans-serif;
+        color: var(--txt);
       }
-      .atmosphere {
+      .bg {
         position: fixed;
         inset: 0;
         z-index: 0;
-        pointer-events: none;
-      }
-      .atmosphere::before {
-        content: "";
-        position: absolute;
-        inset: 0;
         background:
           radial-gradient(
-            820px 620px at 50% 6%,
-            rgba(201, 154, 60, 0.14),
+            900px 600px at 85% 12%,
+            rgba(234, 197, 110, 0.08),
             transparent 60%
           ),
           radial-gradient(
-            680px 680px at 14% 92%,
-            rgba(156, 107, 40, 0.09),
+            700px 500px at 8% 92%,
+            rgba(156, 107, 40, 0.08),
             transparent 60%
-          );
+          ),
+          linear-gradient(160deg, var(--bg), var(--bg2));
+      }
+      .orbs {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(70px);
+        opacity: 0.5;
+        animation: float 20s ease-in-out infinite;
+      }
+      .orb.o1 {
+        width: 380px;
+        height: 380px;
+        background: radial-gradient(
+          circle,
+          rgba(234, 197, 110, 0.4),
+          transparent 70%
+        );
+        top: -100px;
+        right: -80px;
+      }
+      .orb.o2 {
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(
+          circle,
+          rgba(156, 107, 40, 0.45),
+          transparent 70%
+        );
+        bottom: -120px;
+        left: -60px;
+        animation-delay: -7s;
+      }
+      .orb.o3 {
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(
+          circle,
+          rgba(70, 167, 88, 0.14),
+          transparent 70%
+        );
+        top: 44%;
+        left: 58%;
+        animation-delay: -13s;
+      }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
+        }
+        33% {
+          transform: translate(34px, -44px) scale(1.12);
+        }
+        66% {
+          transform: translate(-22px, 32px) scale(0.94);
+        }
       }
       .grain {
         position: fixed;
         inset: 0;
         z-index: 1;
-        pointer-events: none;
         opacity: 0.04;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       }
 
       .deck {
-        position: fixed;
-        inset: 0;
+        position: relative;
         z-index: 2;
+        height: 100%;
+        width: 100%;
       }
       .slide {
         position: absolute;
@@ -85,645 +137,1080 @@
         justify-content: center;
         align-items: center;
         text-align: center;
-        padding: 9vh 9vw;
+        padding: 6vh 7vw;
         opacity: 0;
         visibility: hidden;
-        transform: translateY(24px) scale(0.99);
+        transform: translateY(24px);
         transition:
-          opacity 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
-          transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
-          visibility 0.7s;
-        overflow-y: auto;
+          opacity 0.55s ease,
+          transform 0.55s ease,
+          visibility 0.55s;
       }
       .slide.active {
         opacity: 1;
         visibility: visible;
         transform: none;
       }
+      .slide.active .r {
+        animation: up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+      }
+      .slide.active .r:nth-child(2) {
+        animation-delay: 0.08s;
+      }
+      .slide.active .r:nth-child(3) {
+        animation-delay: 0.16s;
+      }
+      .slide.active .r:nth-child(4) {
+        animation-delay: 0.24s;
+      }
+      .slide.active .r:nth-child(5) {
+        animation-delay: 0.32s;
+      }
+      @keyframes up {
+        from {
+          opacity: 0;
+          transform: translateY(22px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
 
-      .wordmark {
-        font-weight: 600;
-        font-size: 1rem;
-        letter-spacing: 0.32em;
-        color: var(--gold-light);
-        margin-bottom: 2.6rem;
+      .kick {
+        font-size: clamp(14px, 1.2vw, 18px);
+        letter-spacing: 0.34em;
+        color: var(--g2);
+        font-weight: 500;
+        margin-bottom: 20px;
         text-transform: uppercase;
         opacity: 0.85;
       }
-      .eyebrow {
-        font-family: var(--mono);
-        font-size: 0.72rem;
-        letter-spacing: 0.3em;
-        text-transform: uppercase;
-        color: var(--gold);
-        margin-bottom: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 0.8rem;
-      }
-      .eyebrow::before,
-      .eyebrow::after {
-        content: "";
-        width: 28px;
-        height: 1px;
-        background: var(--gold-grad);
-      }
-      h1,
-      h2 {
+      h1 {
+        font-size: clamp(48px, 7vw, 108px);
         font-weight: 800;
-        line-height: 1.12;
+        line-height: 1;
         letter-spacing: -0.02em;
       }
       .gold {
-        background: var(--gold-grad);
+        background: linear-gradient(
+          100deg,
+          var(--g1),
+          var(--g2) 55%,
+          var(--g3)
+        );
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
       }
-
-      #s1 h1 {
-        font-size: clamp(2.8rem, 7.5vw, 5.8rem);
-        font-weight: 900;
-        margin-bottom: 1.5rem;
+      h2 {
+        font-size: clamp(34px, 4.6vw, 68px);
+        font-weight: 700;
+        line-height: 1.08;
+        letter-spacing: -0.01em;
       }
-      #s1 .sub {
-        font-size: clamp(1.05rem, 2.2vw, 1.5rem);
-        color: var(--dim);
-        max-width: 34ch;
-        font-weight: 300;
+      .sub {
+        font-size: clamp(19px, 1.9vw, 28px);
+        color: var(--mut);
+        margin-top: 24px;
+        max-width: 40ch;
       }
-
-      #s2 h2 {
-        font-size: clamp(2.1rem, 5.5vw, 4rem);
-        margin-bottom: 1.8rem;
-        max-width: 18ch;
-      }
-      .lead-text {
-        font-size: clamp(1.05rem, 2vw, 1.4rem);
-        color: var(--text);
-        max-width: 42ch;
-        font-weight: 300;
-        margin-bottom: 1.1rem;
-      }
-      .lead-text strong {
-        color: var(--gold-light);
-        font-weight: 600;
+      .lead {
+        font-size: clamp(20px, 2vw, 30px);
+        color: var(--txt);
+        line-height: 1.45;
+        max-width: 24ch;
       }
 
-      #s3 h2,
-      #s4 h2 {
-        font-size: clamp(1.9rem, 4.6vw, 3.2rem);
-        margin-bottom: 2.4rem;
-        max-width: 20ch;
-      }
-      .grid {
-        display: grid;
-        gap: 1.1rem;
-        width: 100%;
-        max-width: 1000px;
-      }
-      .g3 {
-        grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      }
-      .g5 {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      }
-      .card {
-        background: linear-gradient(
-          160deg,
-          rgba(255, 255, 255, 0.035),
-          rgba(255, 255, 255, 0.005)
-        );
+      .term {
+        margin-top: 36px;
+        width: min(640px, 82vw);
+        background: rgba(10, 10, 12, 0.72);
         border: 1px solid var(--line);
         border-radius: 16px;
-        padding: 1.7rem 1.4rem;
+        overflow: hidden;
+        backdrop-filter: blur(8px);
+        box-shadow: 0 30px 80px -30px rgba(0, 0, 0, 0.85);
+      }
+      .term-bar {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+      }
+      .dot.r {
+        background: #ff5f57;
+      }
+      .dot.y {
+        background: #febc2e;
+      }
+      .dot.g {
+        background: #28c840;
+      }
+      .term-title {
+        margin-right: auto;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12px;
+        color: var(--mut);
+      }
+      .term-body {
+        padding: 22px 24px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: clamp(15px, 1.3vw, 19px);
+        line-height: 2;
+        direction: ltr;
+        text-align: left;
+      }
+      .prompt {
+        color: var(--green);
+      }
+      .typed {
+        color: var(--txt);
+      }
+      .resp {
+        color: var(--mut);
+      }
+      .cursor {
+        display: inline-block;
+        width: 10px;
+        height: 1.05em;
+        background: var(--g2);
+        vertical-align: -2px;
+        margin-left: 3px;
+        animation: blink 1s steps(2) infinite;
+      }
+      @keyframes blink {
+        50% {
+          opacity: 0;
+        }
+      }
+
+      .cols {
+        display: flex;
+        gap: 26px;
+        margin-top: 42px;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+        max-width: 1080px;
+      }
+      .card {
+        flex: 1 1 0;
+        min-width: 280px;
+        background: rgba(20, 19, 25, 0.72);
+        border: 1px solid var(--line);
+        border-radius: 20px;
+        padding: 34px 30px;
+        backdrop-filter: blur(8px);
         transition:
           transform 0.4s,
           border-color 0.4s,
           box-shadow 0.4s;
         text-align: center;
       }
-      .card:hover {
+      .slide.active .card:hover {
         transform: translateY(-7px);
+      }
+      .card.hot {
         border-color: rgba(234, 197, 110, 0.5);
-        box-shadow: 0 22px 50px -26px rgba(201, 154, 60, 0.5);
+        box-shadow:
+          0 0 0 1px rgba(234, 197, 110, 0.12),
+          0 40px 90px -40px rgba(234, 197, 110, 0.3);
       }
-      .card .emoji {
-        font-size: 2rem;
-        display: block;
-        margin-bottom: 0.7rem;
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--mut);
+        margin-bottom: 18px;
       }
-      .card .name {
+      .card.hot .badge {
+        color: var(--g2);
+      }
+      .ic {
+        width: 64px;
+        height: 64px;
+        border-radius: 18px;
+        display: grid;
+        place-items: center;
+        font-size: 30px;
+        margin: 0 auto 18px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+      }
+      .card.hot .ic {
+        background: linear-gradient(135deg, var(--g1), var(--g2));
+        border: none;
+      }
+      .card h3 {
+        font-size: 26px;
         font-weight: 700;
-        font-size: 1.3rem;
-        margin-bottom: 0.1rem;
+        margin-bottom: 11px;
       }
-      .card .tag {
-        color: var(--gold-light);
-        font-size: 0.95rem;
-        font-weight: 500;
-        margin-bottom: 0.6rem;
-        display: block;
-      }
-      .card .desc {
-        color: var(--dim);
-        font-size: 0.9rem;
-        font-weight: 300;
+      .card p {
+        font-size: 17px;
+        color: var(--mut);
         line-height: 1.55;
       }
+      .card.hot p {
+        color: var(--txt);
+      }
 
-      #s5 h2 {
-        font-size: clamp(2rem, 5vw, 3.6rem);
-        margin-bottom: 0.8rem;
+      .team {
+        display: flex;
+        gap: 28px;
+        margin-top: 44px;
+        justify-content: center;
+        flex-wrap: wrap;
+        width: 100%;
+        max-width: 1120px;
       }
-      #s5 .ilead {
-        color: var(--dim);
-        font-size: 1.12rem;
-        font-weight: 300;
-        margin-bottom: 2.2rem;
-        max-width: 40ch;
+      .worker {
+        flex: 1 1 0;
+        min-width: 260px;
+        max-width: 330px;
+        background: rgba(20, 19, 25, 0.7);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        padding: 32px 26px 30px;
+        backdrop-filter: blur(8px);
+        position: relative;
+        transition: 0.4s;
       }
-      .cmd-row {
+      .slide.active .worker:hover {
+        transform: translateY(-8px);
+        border-color: rgba(234, 197, 110, 0.45);
+      }
+      .av {
+        width: 104px;
+        height: 104px;
+        margin: 0 auto 18px;
+        position: relative;
+      }
+      .av svg {
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 14px 30px rgba(234, 197, 110, 0.28));
+      }
+      .av .tool {
+        position: absolute;
+        bottom: -4px;
+        right: -4px;
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 1px solid var(--line);
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 1.2rem;
+        place-items: center;
+        font-size: 20px;
+      }
+      .worker h4 {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 9px;
+      }
+      .worker p {
+        font-size: 15.5px;
+        color: var(--mut);
+        line-height: 1.5;
+      }
+
+      .road {
+        display: flex;
+        flex-direction: column;
+        gap: 13px;
+        margin-top: 34px;
         width: 100%;
         max-width: 920px;
       }
-      .cmd {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: 15px;
-        overflow: hidden;
-        text-align: right;
-      }
-      .cmd-head {
+      .stop {
         display: flex;
         align-items: center;
-        gap: 0.7rem;
-        padding: 0.85rem 1.3rem;
-        border-bottom: 1px solid var(--line);
+        gap: 20px;
+        background: rgba(20, 19, 25, 0.6);
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        padding: 17px 26px;
+        transition: 0.4s;
+        text-align: right;
       }
-      .cmd-head .os {
+      .stop.first {
+        border-color: rgba(234, 197, 110, 0.5);
+        background: linear-gradient(
+          100deg,
+          rgba(234, 197, 110, 0.06),
+          rgba(20, 19, 25, 0.6)
+        );
+      }
+      .num {
+        flex: 0 0 50px;
+        height: 50px;
+        border-radius: 13px;
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+        font-weight: 800;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--line);
+        color: var(--mut);
+      }
+      .stop.first .num {
+        background: linear-gradient(135deg, var(--g1), var(--g2));
+        color: var(--bg);
+        border: none;
+      }
+      .stop .tx h4 {
+        font-size: 20px;
         font-weight: 700;
-        font-size: 1.1rem;
       }
-      .cmd-head .dots {
-        display: flex;
-        gap: 6px;
-        margin-inline-start: auto;
+      .stop .tx p {
+        font-size: 14.5px;
+        color: var(--mut);
+        margin-top: 3px;
       }
-      .cmd-head .dots i {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        display: block;
+      .stop .em {
+        margin-right: auto;
+        font-size: 27px;
+        opacity: 0.85;
       }
-      .cmd-head .dots i:nth-child(1) {
-        background: #ff5f56;
+
+      .glowic {
+        width: 150px;
+        height: 150px;
+        border-radius: 36px;
+        display: grid;
+        place-items: center;
+        font-size: 68px;
+        margin: 34px auto 0;
+        background: radial-gradient(
+          circle at 40% 30%,
+          rgba(234, 197, 110, 0.24),
+          rgba(20, 19, 25, 0.6)
+        );
+        border: 1px solid rgba(234, 197, 110, 0.35);
+        box-shadow: 0 0 70px -10px rgba(234, 197, 110, 0.4);
       }
-      .cmd-head .dots i:nth-child(2) {
-        background: #ffbd2e;
+
+      .graph {
+        margin-top: 24px;
       }
-      .cmd-head .dots i:nth-child(3) {
-        background: #27c93f;
+      .graph svg {
+        width: min(680px, 62vw);
+        height: auto;
       }
-      .cmd-body {
-        padding: 1.2rem;
-        direction: ltr;
-        text-align: left;
-        position: relative;
+      .node {
+        fill: var(--panel);
+        stroke: var(--line);
       }
-      .cmd-body code {
-        font-family: var(--mono);
-        font-size: 0.74rem;
-        color: var(--gold-light);
-        word-break: break-all;
-        line-height: 1.7;
-        display: block;
-        padding-inline-end: 3rem;
+      .nodeC {
+        fill: url(#gg);
+        stroke: none;
       }
-      .copy {
-        position: absolute;
-        top: 0.85rem;
-        inset-inline-end: 0.85rem;
-        background: rgba(234, 197, 110, 0.1);
-        border: 1px solid var(--line);
-        color: var(--gold-light);
-        font-family: var(--mono);
-        font-size: 0.66rem;
-        padding: 0.35rem 0.65rem;
-        border-radius: 7px;
-        cursor: pointer;
-        transition: 0.25s;
+      .edge {
+        stroke: var(--g2);
+        stroke-width: 1.6;
+        opacity: 0.55;
+        stroke-dasharray: 4 4;
+        animation: dash 18s linear infinite;
       }
-      .copy:hover {
-        background: var(--gold);
-        color: #1a1206;
+      @keyframes dash {
+        to {
+          stroke-dashoffset: -200;
+        }
       }
-      .inote {
-        margin-top: 1.8rem;
-        color: var(--dim);
-        font-weight: 300;
-        font-size: 0.98rem;
-        max-width: 54ch;
+      .ntx {
+        fill: var(--txt);
+        font-size: 14px;
+        font-family: "Rubik";
+        text-anchor: middle;
       }
-      .inote b {
-        color: var(--gold-light);
+      .ctx {
+        fill: var(--bg);
+        font-size: 16px;
+        font-weight: 700;
+        font-family: "Rubik";
+        text-anchor: middle;
+      }
+
+      .org {
+        margin-top: 30px;
+        width: min(940px, 84vw);
+      }
+      .org svg {
+        width: 100%;
+        height: auto;
+      }
+      .obox {
+        fill: rgba(20, 19, 25, 0.85);
+        stroke: var(--line);
+        stroke-width: 1.5;
+      }
+      .obox.boss {
+        fill: url(#gg);
+        stroke: none;
+      }
+      .oln {
+        stroke: var(--g2);
+        stroke-width: 1.5;
+        opacity: 0.45;
+      }
+      .otx {
+        fill: var(--txt);
+        font-size: 15px;
         font-weight: 600;
+        font-family: "Rubik";
+        text-anchor: middle;
       }
-
-      #s6 h2 {
-        font-size: clamp(2.4rem, 6.5vw, 4.6rem);
-        margin: 1.6rem 0 1.1rem;
+      .obtx {
+        fill: var(--bg);
+        font-size: 16px;
+        font-weight: 700;
+        font-family: "Rubik";
+        text-anchor: middle;
       }
-      #s6 p {
-        color: var(--dim);
-        font-size: 1.25rem;
-        font-weight: 300;
-        margin-bottom: 2.2rem;
-      }
-      .seal {
-        font-family: var(--mono);
-        font-size: 0.66rem;
-        letter-spacing: 0.26em;
-        color: var(--gold);
-        border: 1px solid var(--line);
-        border-radius: 30px;
-        padding: 0.55rem 1.3rem;
-        text-transform: uppercase;
-      }
-      #s6 .wordmark {
-        margin: 0;
-        font-size: 1.3rem;
-      }
-
-      .slide .reveal {
-        opacity: 0;
-        transform: translateY(26px);
-        transition:
-          opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1),
-          transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-      }
-      .slide.active .reveal {
-        opacity: 1;
-        transform: none;
-      }
-      .slide.active .reveal:nth-child(1) {
-        transition-delay: 0.05s;
-      }
-      .slide.active .reveal:nth-child(2) {
-        transition-delay: 0.15s;
-      }
-      .slide.active .reveal:nth-child(3) {
-        transition-delay: 0.25s;
-      }
-      .slide.active .reveal:nth-child(4) {
-        transition-delay: 0.35s;
-      }
-      .slide.active .reveal:nth-child(5) {
-        transition-delay: 0.45s;
-      }
-      .slide.active .card.reveal:nth-child(1) {
-        transition-delay: 0.1s;
-      }
-      .slide.active .card.reveal:nth-child(2) {
-        transition-delay: 0.2s;
-      }
-      .slide.active .card.reveal:nth-child(3) {
-        transition-delay: 0.3s;
-      }
-      .slide.active .card.reveal:nth-child(4) {
-        transition-delay: 0.4s;
-      }
-      .slide.active .card.reveal:nth-child(5) {
-        transition-delay: 0.5s;
+      .osub {
+        fill: var(--mut);
+        font-size: 11px;
+        font-family: "Rubik";
+        text-anchor: middle;
       }
 
       .nav {
         position: fixed;
-        bottom: 3.5vh;
-        left: 0;
-        right: 0;
-        z-index: 20;
+        bottom: 24px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 1.4rem;
+        gap: 16px;
       }
-      .nav button {
-        width: 48px;
-        height: 48px;
+      .arrow {
+        width: 44px;
+        height: 44px;
         border-radius: 50%;
         border: 1px solid var(--line);
-        background: rgba(20, 18, 25, 0.7);
-        backdrop-filter: blur(8px);
-        color: var(--gold-light);
-        font-size: 1.3rem;
+        background: rgba(20, 19, 25, 0.6);
+        color: var(--txt);
+        font-size: 18px;
         cursor: pointer;
+        display: grid;
+        place-items: center;
+        backdrop-filter: blur(8px);
         transition: 0.25s;
-        display: flex;
-        align-items: center;
-        justify-content: center;
       }
-      .nav button:hover {
-        background: var(--gold);
-        color: #1a1206;
-        border-color: transparent;
-      }
-      .nav button:disabled {
-        opacity: 0.25;
-        cursor: default;
+      .arrow:hover {
+        border-color: var(--g2);
+        color: var(--g2);
       }
       .dots {
         display: flex;
-        gap: 0.6rem;
+        gap: 8px;
       }
-      .dots .d {
-        width: 9px;
-        height: 9px;
+      .nd {
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
-        background: rgba(234, 197, 110, 0.25);
+        background: var(--line);
         cursor: pointer;
-        transition: 0.3s;
+        transition: 0.25s;
       }
-      .dots .d.on {
-        background: var(--gold-light);
-        transform: scale(1.3);
+      .nd.on {
+        background: var(--g2);
+        width: 26px;
+        border-radius: 4px;
       }
-      .counter {
+      .count {
         position: fixed;
-        top: 4vh;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 20;
-        font-family: var(--mono);
-        font-size: 0.76rem;
-        letter-spacing: 0.2em;
-        color: var(--gold);
+        top: 30px;
+        left: 40px;
+        z-index: 10;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 14px;
+        color: var(--mut);
       }
-      .progress {
+      .count b {
+        color: var(--g2);
+      }
+      .brand {
         position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: rgba(255, 255, 255, 0.04);
-        z-index: 30;
-      }
-      .progress i {
-        display: block;
-        height: 100%;
-        background: var(--gold-grad);
-        width: 16%;
-        transition: width 0.5s;
-      }
-      .hint {
-        position: fixed;
-        bottom: 3.5vh;
-        inset-inline-end: 9vw;
-        z-index: 20;
-        font-family: var(--mono);
-        font-size: 0.66rem;
-        letter-spacing: 0.15em;
-        color: var(--dim);
-      }
-      @media (max-width: 640px) {
-        .slide {
-          padding: 10vh 7vw;
-        }
-        .hint {
-          display: none;
-        }
+        top: 28px;
+        right: 40px;
+        z-index: 10;
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        color: var(--mut);
       }
     </style>
   </head>
   <body>
-    <div class="atmosphere"></div>
+    <div class="bg"></div>
+    <div class="orbs">
+      <span class="orb o1"></span><span class="orb o2"></span
+      ><span class="orb o3"></span>
+    </div>
     <div class="grain"></div>
-    <div class="progress"><i id="bar"></i></div>
-    <div class="counter" id="counter">01 / 06</div>
+    <div class="brand">טל בשור</div>
+    <div class="count"><b id="cn">01</b> / 13</div>
 
-    <div class="deck">
-      <!-- 1 WELCOME -->
-      <section class="slide active" id="s1">
-        <div class="wordmark reveal">Tal Bsore</div>
-        <div class="eyebrow reveal">קורס Claude Code Business</div>
-        <h1 class="reveal">ברוכים הבאים 👋</h1>
-        <p class="sub reveal">
-          פרק ההתקנות. כמה דקות של הכנה — ואתם מוכנים להתחיל לעבוד אחרת לגמרי.
-        </p>
+    <svg style="display: none">
+      <defs>
+        <linearGradient id="bgg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#211d1a" />
+          <stop offset="1" stop-color="#100e12" />
+        </linearGradient>
+        <linearGradient id="gg2" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#EAC56E" />
+          <stop offset="1" stop-color="#9C6B28" />
+        </linearGradient>
+      </defs>
+      <symbol id="person" viewBox="0 0 140 140">
+        <circle
+          cx="70"
+          cy="70"
+          r="66"
+          fill="url(#bgg)"
+          stroke="url(#gg2)"
+          stroke-width="2.5"
+        />
+        <circle cx="70" cy="58" r="23" fill="url(#gg2)" />
+        <path d="M30 118 a40 40 0 0 1 80 0 Z" fill="url(#gg2)" />
+      </symbol>
+    </svg>
+
+    <div class="deck" id="deck">
+      <!-- 1 שער -->
+      <section class="slide active">
+        <div class="kick r">סדנת AI לעסקים</div>
+        <h1 class="r"><span class="gold">Claude Code</span><br />Business</h1>
+        <div class="sub r">איך בונים סיסטם ברזל מבוסס AI · מפגש 1</div>
+        <div class="term r">
+          <div class="term-bar">
+            <span class="dot r"></span><span class="dot y"></span
+            ><span class="dot g"></span
+            ><span class="term-title"
+              >claude-code — ~/Claude-Code-Business</span
+            >
+          </div>
+          <div class="term-body">
+            <span class="prompt">›</span> <span class="typed" id="t1"></span
+            ><span class="cursor"></span>
+          </div>
+        </div>
       </section>
 
-      <!-- 2 THE SWITCH -->
-      <section class="slide" id="s2">
-        <div class="eyebrow reveal">לפני שמתקינים — מילה אחת חשובה</div>
-        <h2 class="reveal">
-          זו לא עוד מערכת.<br /><span class="gold">זו תשתית.</span>
-        </h2>
-        <p class="lead-text reveal">
-          🤔 כולם מדברים על Claude Code, ורובם חושבים שזה כלי לכתיבת קוד.
-        </p>
-        <p class="lead-text reveal">
-          האמת? זו תחילת עידן חדש ב-AI. לא עוד צ'אט שמייעץ —
-          <strong>עוזר שפועל בשבילכם.</strong>
-        </p>
-      </section>
-
-      <!-- 3 WHY IT MATTERS -->
-      <section class="slide" id="s3">
-        <div class="eyebrow reveal">למה זה משנה הכל</div>
-        <h2 class="reveal">
-          שלושה דברים שהופכים את זה ל<span class="gold">משחק אחר</span>
-        </h2>
-        <div class="grid g3">
-          <div class="card reveal">
-            <span class="emoji">🔐</span>
-            <div class="name">בעלות על המידע</div>
-            <span class="tag">הכל אצלכם</span>
-            <p class="desc">
-              לא בענן של מישהו אחר — חי אצלכם במחשב. המידע שלכם, נשאר שלכם.
+      <!-- 2 לפני/אחרי -->
+      <section class="slide">
+        <div class="kick r">נקודת הפתיחה</div>
+        <h2 class="r">מה <span class="gold">השתנה</span> ב-AI</h2>
+        <div class="cols r">
+          <div class="card">
+            <div class="badge">עד עכשיו</div>
+            <div class="ic">💬</div>
+            <h3>צ'אט (כמו GPT)</h3>
+            <p>
+              שואלים אותו שאלה — והוא מייעץ. אתם עדיין עושים את כל העבודה
+              בעצמכם.
             </p>
           </div>
-          <div class="card reveal">
-            <span class="emoji">🎯</span>
-            <div class="name">הכל ממקום אחד</div>
-            <span class="tag">די לקפוץ בין כלים</span>
-            <p class="desc">
-              CRM, דיוור, דו"חות — מתחברים לחלון אחד, במקום עשרה חלונות פתוחים.
-            </p>
-          </div>
-          <div class="card reveal">
-            <span class="emoji">🤖</span>
-            <div class="name">פועל במקומכם</div>
-            <span class="tag">לא רק מייעץ</span>
-            <p class="desc">
-              נגמר ה"תסביר לי", מתחיל ה"תבצע עבורי". סוכן שעושה — לא רק מדבר.
+          <div class="card hot">
+            <div class="badge">● עכשיו</div>
+            <div class="ic">🤖</div>
+            <h3>Claude Code</h3>
+            <p>
+              לא מייעץ — <b>עושה</b>. הופך לעובד בעסק שמבצע פעולות שלמות
+              במקומכם.
             </p>
           </div>
         </div>
       </section>
 
-      <!-- 4 TOOLS -->
-      <section class="slide" id="s4">
-        <div class="eyebrow reveal">אז בואו נתכונן 🧰</div>
-        <h2 class="reveal">
-          כדי להיכנס לעידן הזה — <span class="gold">חמישה כלים</span>
+      <!-- 3 הצוות הדיגיטלי -->
+      <section class="slide">
+        <div class="kick r">דמיינו</div>
+        <h2 class="r">
+          צוות שלם של <span class="gold">עובדים דיגיטליים</span>
         </h2>
-        <div class="grid g5">
-          <div class="card reveal">
-            <span class="emoji">🖥️</span>
-            <div class="name">VS Code</div>
-            <span class="tag">שולחן העבודה</span>
-            <p class="desc">התוכנה שבתוכה הכל קורה.</p>
+        <div class="team r">
+          <div class="worker">
+            <div class="av">
+              <svg><use href="#person" /></svg><span class="tool">🧾</span>
+            </div>
+            <h4>עובד Back Office</h4>
+            <p>
+              מוציא חשבוניות, ניירת, תיאומים — לוקח את כל העבודה המשרדית ועושה
+              אותה במקומכם.
+            </p>
           </div>
-          <div class="card reveal">
-            <span class="emoji">⚡</span>
-            <div class="name">Claude Code</div>
-            <span class="tag">העוזר החכם</span>
-            <p class="desc">הכלי עצמו, שבונה בשבילכם.</p>
+          <div class="worker">
+            <div class="av">
+              <svg><use href="#person" /></svg><span class="tool">🔬</span>
+            </div>
+            <h4>עובד מחקר ומוצרים</h4>
+            <p>עושה מחקרים, מנתח מתחרים, ובונה לכם מוצרים חדשים מאפס.</p>
           </div>
-          <div class="card reveal">
-            <span class="emoji">⚙️</span>
-            <div class="name">Node</div>
-            <span class="tag">המנוע</span>
-            <p class="desc">מריץ הכל מאחורי הקלעים.</p>
+          <div class="worker">
+            <div class="av">
+              <svg><use href="#person" /></svg><span class="tool">📣</span>
+            </div>
+            <h4>עובד שיווק ומכירות</h4>
+            <p>כותב תוכן, קולט לידים ועושה פולו-אפ — בלי שאף אחד ייפול.</p>
           </div>
-          <div class="card reveal">
-            <span class="emoji">🔄</span>
-            <div class="name">Git</div>
-            <span class="tag">כפתור ה-Undo</span>
-            <p class="desc">שומר גרסאות — תמיד אפשר לחזור.</p>
+        </div>
+        <div class="sub r" style="max-width: none">
+          וזה בדיוק מה שנשיג בסדנה —
+          <b style="color: var(--g2)">עובדים אמיתיים</b>, שעובדים בשבילכם.
+        </div>
+      </section>
+
+      <!-- 4 המסע -->
+      <section class="slide">
+        <div class="kick r">לאן אנחנו הולכים</div>
+        <h2 class="r">המסע — <span class="gold">4 מפגשים</span></h2>
+        <div class="road r">
+          <div class="stop first">
+            <div class="num">1</div>
+            <div class="tx">
+              <h4>מיפוי + התקנות</h4>
+              <p>ממפים את העסק, מזהים עבודה תפעולית חוזרת וצווארי בקבוק</p>
+            </div>
+            <div class="em">🗺️</div>
           </div>
-          <div class="card reveal">
-            <span class="emoji">🔤</span>
-            <div class="name">עברית</div>
-            <span class="tag">שזה יעבוד נכון</span>
-            <p class="desc">שעברית תיראה כמו שצריך.</p>
+          <div class="stop">
+            <div class="num">2</div>
+            <div class="tx">
+              <h4>סיסטמים + סקילים</h4>
+              <p>בונים את ה-Workflow — שיטות העבודה של העסק</p>
+            </div>
+            <div class="em">⚙️</div>
+          </div>
+          <div class="stop">
+            <div class="num">3</div>
+            <div class="tx">
+              <h4>סוכני AI</h4>
+              <p>סוכנים שלוקחים מאיתנו את התפעול</p>
+            </div>
+            <div class="em">🤖</div>
+          </div>
+          <div class="stop">
+            <div class="num">4</div>
+            <div class="tx">
+              <h4>דשבורד + אוטומציות</h4>
+              <p>ניהול חכם שאוסף את כל הנתונים ועובד בשבילכם</p>
+            </div>
+            <div class="em">📊</div>
           </div>
         </div>
       </section>
 
-      <!-- 5 INSTALL -->
-      <section class="slide" id="s5">
-        <div class="eyebrow reveal">הקסם — פקודה אחת ✨</div>
-        <h2 class="reveal">
-          מתקינים את הכל ב<span class="gold">שורה אחת</span>
+      <!-- 5 שאלה אישית -->
+      <section class="slide">
+        <div class="kick r">רגע לעצמכם ✍️</div>
+        <h2 class="r">
+          אם לא הייתה לכם <span class="gold">שום מגבלה</span><br />טכנולוגית —
+          מה הייתם בונים<br />עם Claude Code בעסק?
         </h2>
-        <p class="ilead reveal">
-          📋 מעתיקים, מדביקים, לוחצים Enter — והסקריפט מתקין את הכל לבד.
-        </p>
-        <div class="cmd-row reveal">
-          <div class="cmd">
-            <div class="cmd-head">
-              <span class="os">🍎 Mac</span
-              ><span class="dots"><i></i><i></i><i></i></span>
-            </div>
-            <div class="cmd-body">
-              <button
-                class="copy"
-                data-cmd="curl -fsSL https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-mac.command | bash"
-              >
-                העתק</button
-              ><code
-                >curl -fsSL
-                https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-mac.command
-                | bash</code
-              >
-            </div>
-          </div>
-          <div class="cmd">
-            <div class="cmd-head">
-              <span class="os">🪟 Windows</span
-              ><span class="dots"><i></i><i></i><i></i></span>
-            </div>
-            <div class="cmd-body">
-              <button
-                class="copy"
-                data-cmd="irm https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-windows.ps1 | iex"
-              >
-                העתק</button
-              ><code
-                >irm
-                https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-windows.ps1
-                | iex</code
-              >
-            </div>
-          </div>
-        </div>
-        <p class="inote reveal">
-          ⏳ רואים טקסט רץ — <b>זה תקין</b>, זה המחשב עובד. מחכים ל"סיימנו",
-          פותחים VS Code, מתחברים. ✅
-        </p>
+        <div class="sub r">רשמו לעצמכם. נחזור לזה בסוף.</div>
       </section>
 
-      <!-- 6 END -->
-      <section class="slide" id="s6">
-        <div class="seal reveal">✨ המצגת הזו נבנתה כולה ב-Claude Code ✨</div>
-        <h2 class="reveal">מתחילים <span class="gold">בפרקטיקה</span> 🚀</h2>
-        <p class="reveal">הסביבה מוכנה. נתראה בשיעורים הבאים.</p>
-        <div class="wordmark reveal">Tal Bsore</div>
+      <!-- 6 פוקוס -->
+      <section class="slide">
+        <div class="kick r">העיקרון</div>
+        <h2 class="r">כשהכל אפשר — <span class="gold">פוקוס הוא הכל</span></h2>
+        <div class="glowic r">🎯</div>
+        <div class="sub r" style="max-width: 48ch">
+          ברגע ש-AI הופך הכל לאפשרי, הסכנה היא להתפזר. היתרון האמיתי: לבחור את
+          הדברים הבודדים שבאמת מזיזים את העסק.
+        </div>
+      </section>
+
+      <!-- 7 מי אני -->
+      <section class="slide">
+        <div class="kick r">מי אני</div>
+        <h2 class="r">טל בשור</h2>
+        <div class="glowic r">💡</div>
+        <div class="sub r" style="max-width: 50ch; color: var(--txt)">
+          כל החיים אובססיבית לייעול.
+          <b style="color: var(--g2)"
+            >Claude Code היה בשבילי מתנה שלא תיארתי שתהיה.</b
+          >
+          ליוויתי 300 בעלי עסקים — וזה הכלי שחיכיתי לו.
+        </div>
+      </section>
+
+      <!-- 8 מה זה טרמינל (מושג 1) -->
+      <section class="slide">
+        <div class="kick r">מושג 1 · הבית של Claude Code</div>
+        <h2 class="r">מה זה <span class="gold">טרמינל</span></h2>
+        <div class="term r" style="margin-top: 30px">
+          <div class="term-bar">
+            <span class="dot r"></span><span class="dot y"></span
+            ><span class="dot g"></span
+            ><span class="term-title">claude-code — הבית שלכם</span>
+          </div>
+          <div class="term-body">
+            <span class="prompt">›</span>
+            <span class="typed">תוציא חשבונית ללקוח</span><br /><span
+              class="resp"
+              >✓ החשבונית נוצרה ונשלחה.</span
+            >
+          </div>
+        </div>
+        <div class="sub r" style="max-width: 46ch">
+          זה המקום שבו מדברים עם Claude Code. במקום ללחוץ על כפתורים — כותבים לו
+          בשפה רגילה מה רוצים, והוא עושה. זה הבית שלו.
+        </div>
+      </section>
+
+      <!-- 9 GitHub (מושג 2) -->
+      <section class="slide">
+        <div class="kick r">מושג 2 · הביטוח שלנו</div>
+        <h2 class="r"><span class="gold">GitHub</span> — הענן ששומר הכל</h2>
+        <div class="cols r">
+          <div class="card">
+            <div class="ic">🛡️</div>
+            <h3>ביטוח</h3>
+            <p>כל העבודה נשמרת בענן — שום דבר לא הולך לאיבוד.</p>
+          </div>
+          <div class="card">
+            <div class="ic">🆓</div>
+            <h3>חינם, דרך גוגל</h3>
+            <p>נרשמים בחינם ומתחברים עם חשבון גוגל.</p>
+          </div>
+          <div class="card">
+            <div class="ic">👥</div>
+            <h3>שיתוף בלי דריסה</h3>
+            <p>משתפים אנשים וצוותים בלי לגעת בנתונים.</p>
+          </div>
+        </div>
+        <div class="sub r" style="margin-top: 26px">
+          ההרשמה:
+          <b style="color: var(--g2); font-family: &quot;JetBrains Mono&quot;"
+            >github.com/signup</b
+          >
+        </div>
+      </section>
+
+      <!-- 10 סקיל (מושג 3) -->
+      <section class="slide">
+        <div class="kick r">מושג 3 · המומחיות</div>
+        <h2 class="r">מה זה <span class="gold">סקיל</span></h2>
+        <div class="glowic r">🧩</div>
+        <div class="sub r" style="max-width: 50ch">
+          שיטת עבודה עם מומחיות שמלמדת את Claude Code — כמו עובד חדש — איך לבצע
+          משימה ולבנות עבורכם דברים.
+        </div>
+        <div class="sub r" style="margin-top: 14px; font-size: 16px">
+          <b style="color: var(--g2)">⚠️ בטיחות:</b> מתקינים סקילים רק מהספרייה
+          הרשמית של אנתרופיק.
+        </div>
+      </section>
+
+      <!-- 11 API/MCP (מושג 4) -->
+      <section class="slide">
+        <div class="kick r">מושג 4 · כוח-העל</div>
+        <h2 class="r"><span class="gold">API · MCP</span> — מדבר עם הכל</h2>
+        <div class="sub r" style="margin-bottom: 6px">
+          זה מה שהופך אותו לסופרמן: מתחבר ומדבר עם כל הפלטפורמות שלכם.
+        </div>
+        <div class="graph r">
+          <svg viewBox="0 0 620 300">
+            <defs>
+              <radialGradient id="gg">
+                <stop offset="0" stop-color="#EAC56E" />
+                <stop offset="1" stop-color="#9C6B28" />
+              </radialGradient>
+            </defs>
+            <line class="edge" x1="310" y1="150" x2="90" y2="60" />
+            <line class="edge" x1="310" y1="150" x2="90" y2="240" />
+            <line class="edge" x1="310" y1="150" x2="530" y2="60" />
+            <line class="edge" x1="310" y1="150" x2="530" y2="240" />
+            <line class="edge" x1="310" y1="150" x2="310" y2="30" />
+            <line class="edge" x1="310" y1="150" x2="310" y2="272" />
+            <circle class="nodeC" cx="310" cy="150" r="50" />
+            <text class="ctx" x="310" y="156">Claude</text>
+            <g>
+              <rect
+                class="node"
+                x="28"
+                y="38"
+                width="124"
+                height="44"
+                rx="11"
+              />
+              <text class="ntx" x="90" y="65">וואטסאפ</text>
+            </g>
+            <g>
+              <rect
+                class="node"
+                x="28"
+                y="218"
+                width="124"
+                height="44"
+                rx="11"
+              />
+              <text class="ntx" x="90" y="245">יומן</text>
+            </g>
+            <g>
+              <rect
+                class="node"
+                x="468"
+                y="38"
+                width="124"
+                height="44"
+                rx="11"
+              />
+              <text class="ntx" x="530" y="65">חשבוניות</text>
+            </g>
+            <g>
+              <rect
+                class="node"
+                x="468"
+                y="218"
+                width="124"
+                height="44"
+                rx="11"
+              />
+              <text class="ntx" x="530" y="245">CRM</text>
+            </g>
+            <g>
+              <rect
+                class="node"
+                x="248"
+                y="8"
+                width="124"
+                height="40"
+                rx="11"
+              />
+              <text class="ntx" x="310" y="33">Sheets</text>
+            </g>
+            <g>
+              <rect
+                class="node"
+                x="248"
+                y="254"
+                width="124"
+                height="40"
+                rx="11"
+              />
+              <text class="ntx" x="310" y="279">Drive</text>
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- 12 לוקאלי/ענן (מושג 5) -->
+      <section class="slide">
+        <div class="kick r">מושג 5</div>
+        <h2 class="r"><span class="gold">לוקאלי</span> מול ענן</h2>
+        <div class="cols r">
+          <div class="card hot">
+            <div class="ic">💻</div>
+            <h3>לוקאלי</h3>
+            <p>
+              על המחשב שלכם. המשרד הווירטואלי יושב כאן — מהיר, פרטי, בשליטתכם
+              המלאה.
+            </p>
+          </div>
+          <div class="card">
+            <div class="ic">☁️</div>
+            <h3>ענן (GitHub)</h3>
+            <p>
+              גיבוי ושיתוף. מעלים עותק — ביטוח, גישה מכל מקום, ושיתוף עם אחרים.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13 תרשים ארגוני -->
+      <section class="slide">
+        <div class="kick r">ועכשיו — בונים</div>
+        <h2 class="r">המשרד <span class="gold">הווירטואלי</span> שלכם</h2>
+        <div class="org r">
+          <svg viewBox="0 0 940 300">
+            <defs>
+              <linearGradient id="gg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#EAC56E" />
+                <stop offset="1" stop-color="#9C6B28" />
+              </linearGradient>
+            </defs>
+            <rect
+              class="obox boss"
+              x="350"
+              y="14"
+              width="240"
+              height="64"
+              rx="14"
+            />
+            <text class="obtx" x="470" y="42">📁 Claude-Code-Business</text>
+            <text
+              class="obtx"
+              x="470"
+              y="64"
+              style="font-size: 12px; font-weight: 500"
+            >
+              CLAUDE.md · מכיר את כל העסק
+            </text>
+            <line class="oln" x1="470" y1="78" x2="470" y2="110" />
+            <line class="oln" x1="98" y1="110" x2="842" y2="110" />
+            <line class="oln" x1="98" y1="110" x2="98" y2="140" />
+            <line class="oln" x1="246" y1="110" x2="246" y2="140" />
+            <line class="oln" x1="394" y1="110" x2="394" y2="140" />
+            <line class="oln" x1="546" y1="110" x2="546" y2="140" />
+            <line class="oln" x1="694" y1="110" x2="694" y2="140" />
+            <line class="oln" x1="842" y1="110" x2="842" y2="140" />
+            <g>
+              <rect
+                class="obox"
+                x="38"
+                y="140"
+                width="120"
+                height="58"
+                rx="12"
+              />
+              <text class="otx" x="98" y="166">שיווק</text>
+              <text class="osub" x="98" y="185">לידים ותוכן</text>
+            </g>
+            <g>
+              <rect
+                class="obox"
+                x="186"
+                y="140"
+                width="120"
+                height="58"
+                rx="12"
+              />
+              <text class="otx" x="246" y="166">מכירות</text>
+              <text class="osub" x="246" y="185">סגירה וגבייה</text>
+            </g>
+            <g>
+              <rect
+                class="obox"
+                x="334"
+                y="140"
+                width="120"
+                height="58"
+                rx="12"
+              />
+              <text class="otx" x="394" y="166">שירות</text>
+              <text class="osub" x="394" y="185">לקוחות</text>
+            </g>
+            <g>
+              <rect
+                class="obox"
+                x="486"
+                y="140"
+                width="120"
+                height="58"
+                rx="12"
+              />
+              <text class="otx" x="546" y="166">פיננסים</text>
+              <text class="osub" x="546" y="185">תזרים ורווח</text>
+            </g>
+            <g>
+              <rect
+                class="obox"
+                x="634"
+                y="140"
+                width="120"
+                height="58"
+                rx="12"
+              />
+              <text class="otx" x="694" y="166">תפעול</text>
+              <text class="osub" x="694" y="185">back office</text>
+            </g>
+            <g>
+              <rect
+                class="obox"
+                x="782"
+                y="140"
+                width="120"
+                height="58"
+                rx="12"
+              />
+              <text class="otx" x="842" y="166">ניהול</text>
+              <text class="osub" x="842" y="185">נתונים</text>
+            </g>
+            <line
+              class="oln"
+              x1="470"
+              y1="198"
+              x2="470"
+              y2="228"
+              stroke-dasharray="4 4"
+            />
+            <text
+              class="osub"
+              x="470"
+              y="252"
+              style="font-size: 14px; fill: #eac56e"
+            >
+              ↓ בכל מחלקה ייכנסו הסוכנים שיעבדו בשבילכם (מפגשים 2–4)
+            </text>
+          </svg>
+        </div>
+        <div class="sub r" style="margin-top: 6px; font-size: 18px">
+          בדיוק כמו ארגון — בעל העסק למעלה, וכל מחלקה תיקייה משלה.
+        </div>
       </section>
     </div>
 
     <div class="nav">
-      <button id="prev" aria-label="הקודם">›</button>
+      <button class="arrow" id="prev">›</button>
       <div class="dots" id="dots"></div>
-      <button id="next" aria-label="הבא">‹</button>
+      <button class="arrow" id="next">‹</button>
     </div>
-    <div class="hint">← → לניווט</div>
 
     <script>
       const slides = [...document.querySelectorAll(".slide")];
-      const dotsWrap = document.getElementById("dots");
-      const counter = document.getElementById("counter");
-      const bar = document.getElementById("bar");
-      const prevBtn = document.getElementById("prev");
-      const nextBtn = document.getElementById("next");
+      const dotsBox = document.getElementById("dots"),
+        cn = document.getElementById("cn");
       let i = 0;
-      slides.forEach((_, n) => {
+      slides.forEach((_, k) => {
         const d = document.createElement("div");
-        d.className = "d" + (n === 0 ? " on" : "");
-        d.onclick = () => go(n);
-        dotsWrap.appendChild(d);
+        d.className = "nd" + (k === 0 ? " on" : "");
+        d.onclick = () => go(k);
+        dotsBox.appendChild(d);
       });
-      const dots = [...dotsWrap.children];
+      const dots = [...dotsBox.children];
       function go(n) {
         i = Math.max(0, Math.min(slides.length - 1, n));
         slides.forEach((s, k) => s.classList.toggle("active", k === i));
         dots.forEach((d, k) => d.classList.toggle("on", k === i));
-        counter.textContent =
-          String(i + 1).padStart(2, "0") +
-          " / " +
-          String(slides.length).padStart(2, "0");
-        bar.style.width = ((i + 1) / slides.length) * 100 + "%";
-        prevBtn.disabled = i === 0;
-        nextBtn.disabled = i === slides.length - 1;
+        cn.textContent = String(i + 1).padStart(2, "0");
+        if (i === 0) typeTerm();
       }
-      function next() {
-        go(i + 1);
-      }
-      function prev() {
-        go(i - 1);
-      }
-      nextBtn.onclick = next;
-      prevBtn.onclick = prev;
-      addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft" || e.key === " " || e.key === "PageDown")
-          next();
-        if (e.key === "ArrowRight" || e.key === "PageUp") prev();
+      document.getElementById("next").onclick = () => go(i + 1);
+      document.getElementById("prev").onclick = () => go(i - 1);
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft" || e.key === " ") go(i + 1);
+        if (e.key === "ArrowRight") go(i - 1);
       });
-      document.querySelectorAll(".copy").forEach((b) =>
-        b.addEventListener("click", (ev) => {
-          ev.stopPropagation();
-          navigator.clipboard.writeText(b.dataset.cmd);
-          const t = b.textContent;
-          b.textContent = "הועתק ✓";
-          setTimeout(() => (b.textContent = t), 1500);
-        }),
-      );
-      go(0);
+      let typed = false;
+      function typeTerm() {
+        if (typed) return;
+        typed = true;
+        const el = document.getElementById("t1"),
+          txt = "מפה לי את העסק";
+        let j = 0;
+        el.textContent = "";
+        const iv = setInterval(() => {
+          el.textContent = txt.slice(0, ++j);
+          if (j >= txt.length) clearInterval(iv);
+        }, 75);
+      }
+      typeTerm();
     </script>
   </body>
 </html>
