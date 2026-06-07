@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>מנחה — מפגש 1 | Claude Code Business</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: "Rubik", sans-serif;
+        background: #f5f5f5;
+        color: #1a1a1a;
+        line-height: 1.6;
+      }
+
+      .top-bar {
+        background: #1a1a2e;
+        color: white;
+        padding: 16px 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      }
+
+      .top-bar h1 {
+        font-size: 18px;
+        font-weight: 600;
+      }
+      .top-bar span {
+        font-size: 13px;
+        opacity: 0.6;
+      }
+
+      .container {
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 28px 20px 60px;
+      }
+
+      /* Section */
+      .section {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      .section-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Links grid */
+      .links-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      @media (max-width: 600px) {
+        .links-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .link-card {
+        border: 1.5px solid #e8e8e8;
+        border-radius: 12px;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: border-color 0.15s;
+      }
+
+      .link-card:hover {
+        border-color: #6c63ff;
+      }
+
+      .link-label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #333;
+      }
+      .link-desc {
+        font-size: 12px;
+        color: #888;
+      }
+
+      .link-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+      }
+
+      .btn-open,
+      .btn-copy {
+        flex: 1;
+        padding: 7px 10px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        font-family: inherit;
+        transition: background 0.15s;
+      }
+
+      .btn-open {
+        background: #6c63ff;
+        color: white;
+        text-decoration: none;
+        text-align: center;
+      }
+      .btn-open:hover {
+        background: #5a53e0;
+      }
+      .btn-copy {
+        background: #f0f0f0;
+        color: #333;
+      }
+      .btn-copy:hover {
+        background: #e0e0e0;
+      }
+      .btn-copy.copied {
+        background: #22c55e;
+        color: white;
+      }
+
+      /* Code blocks */
+      .code-block {
+        background: #1a1a2e;
+        color: #a8ff78;
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-family: "Courier New", monospace;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 10px;
+      }
+
+      .code-block code {
+        flex: 1;
+        word-break: break-all;
+        direction: ltr;
+        text-align: left;
+      }
+
+      .btn-copy-code {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 5px 10px;
+        font-size: 12px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-family: inherit;
+        transition: background 0.15s;
+        flex-shrink: 0;
+      }
+
+      .btn-copy-code:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .btn-copy-code.copied {
+        background: #22c55e;
+      }
+
+      /* Timeline */
+      .timeline {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .timeline-item {
+        display: flex;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid #f0f0f0;
+        position: relative;
+      }
+
+      .timeline-item:last-child {
+        border-bottom: none;
+      }
+
+      .time-badge {
+        background: #f0eeff;
+        color: #6c63ff;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 6px;
+        white-space: nowrap;
+        height: fit-content;
+        margin-top: 2px;
+        flex-shrink: 0;
+      }
+
+      .time-badge.highlight {
+        background: #6c63ff;
+        color: white;
+      }
+
+      .timeline-content h3 {
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 3px;
+      }
+      .timeline-content p {
+        font-size: 13px;
+        color: #666;
+      }
+
+      /* Chat messages */
+      .chat-msg {
+        background: #f0eeff;
+        border-right: 3px solid #6c63ff;
+        border-radius: 0 10px 10px 0;
+        padding: 12px 14px;
+        font-size: 14px;
+        margin-bottom: 10px;
+        position: relative;
+      }
+
+      .chat-msg .copy-msg {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: #6c63ff;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 4px 8px;
+        font-size: 11px;
+        cursor: pointer;
+        font-family: inherit;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+
+      .chat-msg:hover .copy-msg {
+        opacity: 1;
+      }
+
+      /* Checklist */
+      .checklist {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .checklist li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14px;
+        color: #333;
+      }
+
+      .check-box {
+        width: 20px;
+        height: 20px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        flex-shrink: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1px;
+        transition: all 0.15s;
+      }
+
+      .check-box.done {
+        background: #22c55e;
+        border-color: #22c55e;
+        color: white;
+        font-size: 12px;
+      }
+
+      /* Alert */
+      .alert {
+        background: #fff8e1;
+        border: 1.5px solid #ffd54f;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 13px;
+        color: #5d4037;
+        margin-bottom: 16px;
+      }
+
+      .tag {
+        display: inline-block;
+        background: #e8f5e9;
+        color: #2e7d32;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 7px;
+        border-radius: 4px;
+        margin-right: 4px;
+      }
+
+      .tag.red {
+        background: #ffebee;
+        color: #c62828;
+      }
+      .tag.blue {
+        background: #e3f2fd;
+        color: #1565c0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-bar">
+      <div>
+        <h1>🎤 מנחה — מפגש 1</h1>
+        <span>Claude Code Business · לשימוש פרטי בלבד</span>
+      </div>
+    </div>
+
+    <div class="container">
+      <!-- Checklist -->
+      <div class="section">
+        <div class="section-title">✅ צ'קליסט לפני שמתחילים</div>
+        <ul class="checklist" id="checklist">
+          <li>
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            מצגת פתוחה לשיתוף מסך
+          </li>
+          <li>
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            הבוט / הסוכן שלך מוכן לדמו פתיחה
+          </li>
+          <li>
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            Claude Code פתוח על העסק שלך
+          </li>
+          <li>
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            לינק האבטחה + מדריך מושגים מוכנים לשליחה
+          </li>
+          <li>
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            הקלטת Zoom פעילה
+          </li>
+          <li>
+            <div class="check-box" onclick="toggleCheck(this)"></div>
+            לבקש: מול מחשב, לא טלפון
+          </li>
+        </ul>
+      </div>
+
+      <!-- Main links -->
+      <div class="section">
+        <div class="section-title">🔗 קישורים לשלוח בצ'אט הזום</div>
+        <div class="links-grid">
+          <div class="link-card">
+            <div class="link-label">📋 דף ריכוז (התקנות + כלים)</div>
+            <div class="link-desc">כל הקישורים להתחברות במקום אחד</div>
+            <div class="link-actions">
+              <a
+                class="btn-open"
+                href="https://talbs1988-dotcom.github.io/claude-code-setup/links.html"
+                target="_blank"
+                >פתח</a
+              >
+              <button
+                class="btn-copy"
+                onclick="
+                  copyText(
+                    'https://talbs1988-dotcom.github.io/claude-code-setup/links.html',
+                    this,
+                  )
+                "
+              >
+                העתק
+              </button>
+            </div>
+          </div>
+          <div class="link-card">
+            <div class="link-label">🎥 מצגת מפגש 1</div>
+            <div class="link-desc">המצגת המלאה לשיתוף מסך</div>
+            <div class="link-actions">
+              <a
+                class="btn-open"
+                href="https://talbs1988-dotcom.github.io/claude-code-setup/presentation/index.html"
+                target="_blank"
+                >פתח</a
+              >
+              <button
+                class="btn-copy"
+                onclick="
+                  copyText(
+                    'https://talbs1988-dotcom.github.io/claude-code-setup/presentation/index.html',
+                    this,
+                  )
+                "
+              >
+                העתק
+              </button>
+            </div>
+          </div>
+          <div class="link-card">
+            <div class="link-label">📖 מילון ממשק</div>
+            <div class="link-desc">הסבר על מושגים — לשלוח בצ'אט</div>
+            <div class="link-actions">
+              <a
+                class="btn-open"
+                href="https://talbs1988-dotcom.github.io/claude-code-setup/glossary.html"
+                target="_blank"
+                >פתח</a
+              >
+              <button
+                class="btn-copy"
+                onclick="
+                  copyText(
+                    'https://talbs1988-dotcom.github.io/claude-code-setup/glossary.html',
+                    this,
+                  )
+                "
+              >
+                העתק
+              </button>
+            </div>
+          </div>
+          <div class="link-card">
+            <div class="link-label">📦 ערכת המיפוי (להורדה)</div>
+            <div class="link-desc">ZIP לתלמידים + הוראות</div>
+            <div class="link-actions">
+              <a
+                class="btn-open"
+                href="https://talbs1988-dotcom.github.io/claude-code-setup/distribution/index.html"
+                target="_blank"
+                >פתח</a
+              >
+              <button
+                class="btn-copy"
+                onclick="
+                  copyText(
+                    'https://talbs1988-dotcom.github.io/claude-code-setup/distribution/index.html',
+                    this,
+                  )
+                "
+              >
+                העתק
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Install commands -->
+      <div class="section">
+        <div class="section-title">💻 פקודות התקנה — להדביק בצ'אט הזום</div>
+        <div class="alert">⚠️ לשלוח לכל אחד לפי סוג המחשב שלו</div>
+
+        <div
+          style="
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+          "
+        >
+          🍎 Mac — Terminal
+        </div>
+        <div class="code-block">
+          <code
+            >curl -fsSL
+            https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-mac.command
+            | bash</code
+          >
+          <button
+            class="btn-copy-code"
+            onclick="
+              copyCode(
+                this,
+                'curl -fsSL https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-mac.command | bash',
+              )
+            "
+          >
+            העתק
+          </button>
+        </div>
+
+        <div
+          style="
+            margin-bottom: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+          "
+        >
+          🪟 Windows — PowerShell
+        </div>
+        <div class="code-block">
+          <code
+            >irm
+            https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-windows.ps1
+            | iex</code
+          >
+          <button
+            class="btn-copy-code"
+            onclick="
+              copyCode(
+                this,
+                'irm https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/install-windows.ps1 | iex',
+              )
+            "
+          >
+            העתק
+          </button>
+        </div>
+      </div>
+
+      <!-- Claude commands to demo -->
+      <div class="section">
+        <div class="section-title">🤖 פקודות לשלוח בצ'אט הזום (לדמו)</div>
+        <div class="chat-msg">
+          מפה לי את העסק
+          <button class="copy-msg" onclick="copyText('מפה לי את העסק', this)">
+            העתק
+          </button>
+        </div>
+        <div class="chat-msg">
+          נתח את המיפוי שלי ובנה לי את מפת העסק
+          <button
+            class="copy-msg"
+            onclick="copyText('נתח את המיפוי שלי ובנה לי את מפת העסק', this)"
+          >
+            העתק
+          </button>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="section">
+        <div class="section-title">⏱ סדר המפגש — שעה ו-45</div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="time-badge highlight">8 דק'</div>
+            <div class="timeline-content">
+              <h3>0. דמו פתיחה + מסע רגשי ⭐</h3>
+              <p>
+                מראה את הבוט שלך עובד בזמן אמת (90 שניות). "דמיינו שמחר בבוקר יש
+                לכם עובד..."
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge">4 דק'</div>
+            <div class="timeline-content">
+              <h3>1. מי אני</h3>
+              <p>הסיפור שלך — קצר ואישי. 300 עסקים שליווית, מה ראית.</p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge">6 דק'</div>
+            <div class="timeline-content">
+              <h3>2. ממשק ומושגים</h3>
+              <p>
+                Claude Code = העובד החדש. סוכן = גיים-צ'יינג'ר. שליחת מדריך
+                מושגים בצ'אט.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge">5 דק'</div>
+            <div class="timeline-content">
+              <h3>3. התקנות + רשת ביטחון</h3>
+              <p>
+                שליחת פקודות בצ'אט. "כולם פותחים Claude Code. עבד ✅ / תקוע —
+                נעצור."
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge">7 דק'</div>
+            <div class="timeline-content">
+              <h3>4. CLAUDE.md + המשרד הווירטואלי</h3>
+              <p>
+                CLAUDE.md = תיק העובד. בניית תיקיית "סדנת Claude Code Business".
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge">15 דק'</div>
+            <div class="timeline-content">
+              <h3>5. בניית CLAUDE.md אישי</h3>
+              <p>
+                כל אחד: "תכתבו ל-Claude מי אתם ומה העסק, ותגידו לו לשמור
+                ב-CLAUDE.md"
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge highlight">25 דק'</div>
+            <div class="timeline-content">
+              <h3>6. "מפה לי את העסק" ⭐ הכי חשוב</h3>
+              <p>
+                הדגמה (4') → כל אחד ממפה (20'). דגש על עבודה תפעולית וידנית.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge">15 דק'</div>
+            <div class="timeline-content">
+              <h3>7. "נתח את המיפוי שלי"</h3>
+              <p>
+                טבלת A/B/C · דירוג מחלקות · צוואר בקבוק · כמה שעות אפשר להוריד.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge">15 דק'</div>
+            <div class="timeline-content">
+              <h3>8. Claude לוקח משימה + בחירת סוכנים</h3>
+              <p>
+                משימה ידנית אחת → Claude עושה אותה עכשיו. בוחרים 1 סוכן (לא 3).
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge">5 דק'</div>
+            <div class="timeline-content">
+              <h3>9. סיכום + שיעורי בית</h3>
+              <p>
+                2 משימות נוספות + לחדד מפת העסק + לאסוף סיפור השיווק למפגש 2.
+              </p>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="time-badge">בונוס</div>
+            <div class="timeline-content">
+              <h3>10. בוט וואטסאפ (אם נספיק)</h3>
+              <p>זרע ליעד של מפגש 4.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Troubleshooting -->
+      <div class="section">
+        <div class="section-title">🧰 תקלות נפוצות</div>
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <div
+            style="
+              display: flex;
+              gap: 12px;
+              font-size: 13px;
+              padding: 10px;
+              background: #fafafa;
+              border-radius: 8px;
+            "
+          >
+            <span class="tag red">תקלה</span>
+            <div>
+              <strong>לא נפתח Claude Code</strong> — שיתוף מסך, לרוב רק כניסה
+              לחשבון
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 12px;
+              font-size: 13px;
+              padding: 10px;
+              background: #fafafa;
+              border-radius: 8px;
+            "
+          >
+            <span class="tag red">תקלה</span>
+            <div>
+              <strong>"מפה לי את העסק" לא מפעיל סקיל</strong> — "תפעיל את הסקיל
+              business-mapping"
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 12px;
+              font-size: 13px;
+              padding: 10px;
+              background: #fafafa;
+              border-radius: 8px;
+            "
+          >
+            <span class="tag red">תקלה</span>
+            <div><strong>עונה באנגלית</strong> — "תענה בעברית"</div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 12px;
+              font-size: 13px;
+              padding: 10px;
+              background: #fafafa;
+              border-radius: 8px;
+            "
+          >
+            <span class="tag red">תקלה</span>
+            <div>
+              <strong>רוצה לקפוץ לבוט</strong> — "הבוט יהיה חכם יותר אחרי שהוא
+              מכיר את העסק — בונים במפגש 4"
+            </div>
+          </div>
+          <div
+            style="
+              display: flex;
+              gap: 12px;
+              font-size: 13px;
+              padding: 10px;
+              background: #fafafa;
+              border-radius: 8px;
+            "
+          >
+            <span class="tag red">תקלה</span>
+            <div>
+              <strong>נגמר הזמן במיפוי</strong> — משלימים בבית, העיקר שכל אחד
+              התחיל
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function copyText(text, btn) {
+        navigator.clipboard.writeText(text);
+        const orig = btn.textContent;
+        btn.textContent = "✓ הועתק";
+        btn.classList.add("copied");
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove("copied");
+        }, 2000);
+      }
+
+      function copyCode(btn, text) {
+        navigator.clipboard.writeText(text);
+        const orig = btn.textContent;
+        btn.textContent = "✓ הועתק";
+        btn.classList.add("copied");
+        setTimeout(() => {
+          btn.textContent = orig;
+          btn.classList.remove("copied");
+        }, 2000);
+      }
+
+      function toggleCheck(el) {
+        el.classList.toggle("done");
+        el.textContent = el.classList.contains("done") ? "✓" : "";
+      }
+    </script>
+  </body>
+</html>
