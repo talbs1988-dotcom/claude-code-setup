@@ -62,3 +62,15 @@ irm https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-setup/main/in
 ## אחרי ההתקנה
 
 פותחים את VS Code, לוחצים על האייקון של Claude בצד, ומתחברים עם חשבון ה-Claude שלכם.
+
+---
+
+## 🔒 שלב אחרון — אבטחת הסביבה
+
+אחרי שמתחברים, מדביקים את ההודעה הזו ישירות בצ'אט של Claude:
+
+```
+קרא וקיים: https://raw.githubusercontent.com/talbs1988-dotcom/claude-code-security-plugin/main/plugins/security-hardening/skills/security-and-hardening/SKILL.md
+```
+
+Claude יבצע 3 שכבות הגנה ויאשר שהכל ירוק. לא צריך לעשות יותר כלום.
